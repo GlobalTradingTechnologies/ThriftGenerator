@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ee19f9ee31ff1f5233b0df36dd7ae7c0",
+    "hash": "258d8ca716d8a6b3a21214839fb7b86a",
     "packages": [
         {
             "name": "zendframework/zend-code",
@@ -195,6 +195,43 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "apache/thrift",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://git-wip-us.apache.org/repos/asf/thrift.git",
+                "reference": "e5ff9a860d69fbd6cc6d6cb79833930e1148e4c0"
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Thrift": "lib/php/lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Apache Thrift Developers",
+                    "email": "dev@thrift.apache.org",
+                    "homepage": "http://thrift.apache.org"
+                }
+            ],
+            "description": "Apache Thrift RPC system",
+            "homepage": "http://thrift.apache.org/",
+            "time": "2014-11-11 00:39:38"
+        },
         {
             "name": "phpunit/php-code-coverage",
             "version": "1.2.18",
@@ -562,6 +599,53 @@
             "time": "2013-01-13 10:24:48"
         },
         {
+            "name": "symfony/process",
+            "version": "v2.5.6",
+            "target-dir": "Symfony/Component/Process",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/Process.git",
+                "reference": "9bbacbb3a7a27b17c0d51e2f126f59e0e588ad3a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/Process/zipball/9bbacbb3a7a27b17c0d51e2f126f59e0e588ad3a",
+                "reference": "9bbacbb3a7a27b17c0d51e2f126f59e0e588ad3a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.5-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\Process\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                },
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "Symfony Process Component",
+            "homepage": "http://symfony.com",
+            "time": "2014-10-01 05:50:18"
+        },
+        {
             "name": "symfony/yaml",
             "version": "v2.5.6",
             "target-dir": "Symfony/Component/Yaml",
@@ -611,7 +695,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "apache/thrift": 20
+    },
     "prefer-stable": false,
     "platform": {
         "php": ">=5.3.3"
