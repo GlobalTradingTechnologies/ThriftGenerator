@@ -14,6 +14,9 @@ namespace Gtt\ThriftGenerator\Generator;
 
 use Gtt\ThriftGenerator\Reflection\ServiceReflection;
 use Gtt\ThriftGenerator\Exception\ClassNotSpecifiedException;
+use Gtt\ThriftGenerator\Transformer\ComplexTypeNameTransformer;
+use Gtt\ThriftGenerator\Transformer\NamespaceTransformer;
+use Gtt\ThriftGenerator\Transformer\ServiceNameTransformer;
 
 use ReflectionClass;
 
@@ -40,7 +43,7 @@ class ThriftGenerator extends AbstractGenerator
     protected $serviceReflection;
 
     /**
-     *
+     * Sets class reflection for thrift file content generation
      *
      * @param ReflectionClass $classRef
      *
@@ -165,7 +168,9 @@ EOT;
     protected function getNamespaceGenerator()
     {
         $generator = new NamespaceGenerator();
-        $generator->setIndentation($this->getIndentation());
+        $generator
+            ->setNamespaceTransformer(new NamespaceTransformer())
+            ->setIndentation($this->getIndentation());
 
         return $generator;
     }
@@ -178,7 +183,9 @@ EOT;
     protected function getServiceGenerator()
     {
         $generator = new ServiceGenerator();
-        $generator->setIndentation($this->getIndentation());
+        $generator
+            ->setServiceNameTransformer(new ServiceNameTransformer())
+            ->setIndentation($this->getIndentation());
 
         return $generator;
     }
@@ -191,7 +198,11 @@ EOT;
     protected function getStructGenerator()
     {
         $generator = new StructGenerator();
-        $generator->setIndentation($this->getIndentation());
+        $generator
+            ->setComplexTypeNameTransformer(
+                new ComplexTypeNameTransformer($this->classRef->getNamespaceName())
+            )
+            ->setIndentation($this->getIndentation());
 
         return $generator;
     }
@@ -204,7 +215,11 @@ EOT;
     protected function getExceptionGenerator()
     {
         $generator = new ExceptionGenerator();
-        $generator->setIndentation($this->getIndentation());
+        $generator
+            ->setComplexTypeNameTransformer(
+                new ComplexTypeNameTransformer($this->classRef->getNamespaceName())
+            )
+            ->setIndentation($this->getIndentation());
 
         return $generator;
     }

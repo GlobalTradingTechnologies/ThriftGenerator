@@ -15,7 +15,7 @@ namespace Gtt\ThriftGenerator\Reflection;
 use Gtt\ThriftGenerator\Exception\InvalidClassStructureException;
 use Gtt\ThriftGenerator\Reflection\MethodPrototype;
 
-use Gtt\ThriftGenerator\TypeHandler;
+use Gtt\ThriftGenerator\TypeHelper;
 use Zend\Code\Reflection\MethodReflection;
 
 use Zend\Code\Reflection\PropertyReflection;
@@ -338,8 +338,8 @@ class ServiceReflection extends ReflectionClass
      */
     private function resolveParameterSingleClass($type)
     {
-        if (TypeHandler::isListType($type)) {
-            $type = TypeHandler::getListSingleType($type);
+        if (TypeHelper::isListType($type)) {
+            $type = TypeHelper::getListSingleType($type);
         }
         if (class_exists($type) || interface_exists($type)) {
             return new ReflectionClass($type);

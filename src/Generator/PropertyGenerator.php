@@ -14,8 +14,9 @@ namespace Gtt\ThriftGenerator\Generator;
 
 use Gtt\ThriftGenerator\Exception\InvalidClassStructureException;
 use Gtt\ThriftGenerator\Exception\PropertyNotSpecifiedException;
+use Gtt\ThriftGenerator\Exception\TransformerNotSpecifiedException;
 use Gtt\ThriftGenerator\Exception\UnsupportedDefaultValueException;
-use Gtt\ThriftGenerator\TypeHandler;
+use Gtt\ThriftGenerator\Transformer\TransformerInterface;
 
 use Zend\Code\Reflection\PropertyReflection;
 
@@ -43,6 +44,13 @@ class PropertyGenerator extends AbstractGenerator
     protected $propertyDefaultValue = null;
 
     /**
+     * Type transfer
+     *
+     * @var TransformerInterface
+     */
+    protected $typeTransformer;
+
+    /**
      * Sets property reflection
      *
      * @param ReflectionProperty $propertyRef property reflection
@@ -61,6 +69,19 @@ class PropertyGenerator extends AbstractGenerator
     }
 
     /**
+     * Sets type transformer
+     *
+     * @param TransformerInterface $transformer type transformer
+     *
+     * @return $this
+     */
+    public function setTypeTransformer(TransformerInterface $transformer)
+    {
+        $this->typeTransformer = $transformer;
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function generate()
@@ -70,7 +91,7 @@ class PropertyGenerator extends AbstractGenerator
         }
 
         $propertyType       = $this->getPropertyType();
-        $thriftPropertyType = TypeHandler::transform($propertyType);
+        $thriftPropertyType = $this->transformType($propertyType);
         $propertyName       = $this->propertyRef->getName();
 
         $default = "";
@@ -162,5 +183,22 @@ EOT;
         // TODO should we do something with booleans?
 
         return $generatedDefaultValue;
+    }
+
+    /**
+     * Transforms PHP type to thrift type
+     *
+     * @param string $type PHP type
+     *
+     * @throws TransformerNotSpecifiedException is transformer is not specified
+     *
+     * @return string thrift type
+     */
+    protected function transformType($type)
+    {
+        if (!$this->typeTransformer) {
+            throw new TransformerNotSpecifiedException("Type", $type);
+        }
+        return $this->typeTransformer->transform($type);
     }
 }
