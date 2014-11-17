@@ -218,7 +218,7 @@ class ServiceReflection extends ReflectionClass
         foreach ($this->methodPrototypes as $methodPrototype) {
             // collect method params
             foreach ($methodPrototype->getParameters() as $parameterRef) {
-                /** @var \ReflectionClass $parameterClassRef */
+                /** @var ReflectionClass $parameterClassRef */
                 $parameterClassRef = $this->resolveParameterSingleClass($parameterRef->getType());
                 if ($parameterClassRef && !isset($structRefs[$parameterClassRef->getName()])) {
                     if (!$parameterClassRef->isInstantiable()) {

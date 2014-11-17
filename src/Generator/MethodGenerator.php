@@ -152,7 +152,7 @@ EOT;
      *
      * @param string $className class name
      * @param string $methodName method name
-     * @param string $exceptionName converted thrift exception type
+     * @param string $exceptionType converted thrift exception type
      *
      * @return string
      */

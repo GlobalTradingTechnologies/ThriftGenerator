@@ -149,7 +149,7 @@ EOT;
     /**
      * Generates thrift services
      *
-     * @return array
+     * @return string
      */
     protected function generateServices()
     {
