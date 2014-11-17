@@ -193,7 +193,7 @@ class ServiceReflection extends ReflectionClass
                             sprintf(
                                 "Method %s has invalid exception %s" .
                                 "Only instantiable subclassess of classes \Exception class are allowed.",
-                                $prototype->getReflectionMethod()->getName(),
+                                $prototype->getMethodReflection()->getName(),
                                 $exceptionRef->getName()
                             )
                         );
@@ -250,7 +250,7 @@ class ServiceReflection extends ReflectionClass
                         "Method %s has non-instantiable return value %s" .
                         "Only instantiable classes are allowed for method return values.",
                         $returnClassRef->getName(),
-                        $methodPrototype->getReflectionMethod()->getName()
+                        $methodPrototype->getMethodReflection()->getName()
                     )
                 );
             }
