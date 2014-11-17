@@ -13,8 +13,9 @@
 namespace Gtt\ThriftGenerator\Generator;
 
 use Gtt\ThriftGenerator\Exception\MethodNotSpecifiedException;
+use Gtt\ThriftGenerator\Exception\TransformerNotSpecifiedException;
 use Gtt\ThriftGenerator\Reflection\MethodPrototype;
-use Gtt\ThriftGenerator\TypeHandler;
+use Gtt\ThriftGenerator\Transformer\TransformerInterface;
 
 use Zend\Server\Reflection\ReflectionParameter as ZendReflectionParameter;
 
@@ -33,6 +34,13 @@ class MethodGenerator extends AbstractGenerator
     protected $methodPrototype;
 
     /**
+     * Type transfer
+     *
+     * @var TransformerInterface
+     */
+    protected $typeTransformer;
+
+    /**
      * Sets method prototype
      *
      * @param MethodPrototype $methodPrototype method prototype
@@ -46,6 +54,19 @@ class MethodGenerator extends AbstractGenerator
     }
 
     /**
+     * Sets type transformer
+     *
+     * @param TransformerInterface $transformer type transformer
+     *
+     * @return $this
+     */
+    public function setTypeTransformer(TransformerInterface $transformer)
+    {
+        $this->typeTransformer = $transformer;
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function generate()
@@ -54,7 +75,7 @@ class MethodGenerator extends AbstractGenerator
             throw new MethodNotSpecifiedException("Method to be handled is not specified");
         }
 
-        $returnType = TypeHandler::transform($this->methodPrototype->getReturnType());
+        $returnType = $this->transformType($this->methodPrototype->getReturnType());
         $methodName = $this->methodPrototype->getMethodReflection()->getName();
 
         // parameters
@@ -63,7 +84,7 @@ class MethodGenerator extends AbstractGenerator
         /** @var ZendReflectionParameter $parameterRef */
         foreach ($this->methodPrototype->getParameters() as $parameterRef) {
             $identifier   += 1;
-            $parameterType = TypeHandler::transform($parameterRef->getType());
+            $parameterType = $this->transformType($parameterRef->getType());
             $parameterName = $parameterRef->getName();
             $parameters[]  = "$identifier:$parameterType $parameterName";
         }
@@ -77,7 +98,7 @@ class MethodGenerator extends AbstractGenerator
             $exceptions = array();
             foreach ($exceptionRefs as $exceptionRef) {
                 $identifier   += 1;
-                $exceptionType = TypeHandler::transform($exceptionRef->getName());
+                $exceptionType = $this->transformType($exceptionRef->getName());
                 $exceptionName = $this->generateExceptionName(
                     $this->methodPrototype->getMethodReflection()->getDeclaringClass()->getName(),
                     $this->methodPrototype->getMethodReflection()->getName(),
@@ -109,17 +130,34 @@ EOT;
     }
 
     /**
+     * Transforms PHP type to thrift type
+     *
+     * @param string $type PHP type
+     *
+     * @throws TransformerNotSpecifiedException is transformer is not specified
+     *
+     * @return string thrift type
+     */
+    protected function transformType($type)
+    {
+        if (!$this->typeTransformer) {
+            throw new TransformerNotSpecifiedException("Type", $type);
+        }
+        return $this->typeTransformer->transform($type);
+    }
+
+    /**
      * Generates exception name
      * TODO rethink that (what name for exceptions in methods should be?)
      *
      * @param string $className class name
      * @param string $methodName method name
-     * @param string $exceptionName exception name
+     * @param string $exceptionName converted thrift exception type
      *
      * @return string
      */
-    protected function generateExceptionName($className, $methodName, $exceptionName)
+    protected function generateExceptionName($className, $methodName, $exceptionType)
     {
-        return implode("_", array($className, $methodName, $exceptionName));
+        return implode("_", array($this->transformType($className), $methodName, $exceptionType));
     }
 }

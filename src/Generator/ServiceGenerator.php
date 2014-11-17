@@ -13,8 +13,12 @@
 namespace Gtt\ThriftGenerator\Generator;
 
 use Gtt\ThriftGenerator\Exception\ServiceNotSpecifiedException;
+use Gtt\ThriftGenerator\Exception\TransformerNotSpecifiedException;
 use Gtt\ThriftGenerator\Reflection\ServiceReflection;
 use Gtt\ThriftGenerator\Reflection\MethodPrototype;
+use Gtt\ThriftGenerator\Transformer\ComplexTypeNameTransformer;
+use Gtt\ThriftGenerator\Transformer\TransformerInterface;
+use Gtt\ThriftGenerator\Transformer\TypeTransformer;
 
 /**
  * Generates thrift service
@@ -31,6 +35,13 @@ class ServiceGenerator extends AbstractGenerator
     protected $serviceReflection;
 
     /**
+     * Transformer service name
+     *
+     * @var TransformerInterface
+     */
+    protected $serviceNameTransformer;
+
+    /**
      * Sets service
      *
      * @param ServiceReflection $serviceReflection service reflection
@@ -40,6 +51,19 @@ class ServiceGenerator extends AbstractGenerator
     public function setService(ServiceReflection $serviceReflection)
     {
         $this->serviceReflection = $serviceReflection;
+        return $this;
+    }
+
+    /**
+     * Sets service name transformer
+     *
+     * @param TransformerInterface $transformer service name transformer
+     *
+     * @return $this
+     */
+    public function setServiceNameTransformer(TransformerInterface $transformer)
+    {
+        $this->serviceNameTransformer = $transformer;
         return $this;
     }
 
@@ -61,7 +85,7 @@ class ServiceGenerator extends AbstractGenerator
         }
         $methods = implode(",\n", $methods);
 
-        $name = $this->serviceReflection->getName();
+        $name = $this->transformName($this->serviceReflection->getName());
 
         $search  = array("<name>", "<methods>");
         $replace = array($name, $methods);
@@ -92,8 +116,30 @@ EOT;
      */
     protected function getMethodGenerator()
     {
+        $typeTransformer = new TypeTransformer(
+            new ComplexTypeNameTransformer($this->serviceReflection->getNamespaceName())
+        );
         $generator = new MethodGenerator();
-        $generator->setIndentation($this->getIndentation());
+        $generator
+            ->setTypeTransformer($typeTransformer)
+            ->setIndentation($this->getIndentation());
         return $generator;
+    }
+
+    /**
+     * Transforms service name
+     *
+     * @param string $name service name
+     *
+     * @throws TransformerNotSpecifiedException is transformer is not specified
+     *
+     * @return string
+     */
+    protected function transformName($name)
+    {
+        if (!$this->serviceNameTransformer) {
+            throw new TransformerNotSpecifiedException("Service name", $name);
+        }
+        return $this->serviceNameTransformer ? $this->serviceNameTransformer->transform($name) : $name;
     }
 }

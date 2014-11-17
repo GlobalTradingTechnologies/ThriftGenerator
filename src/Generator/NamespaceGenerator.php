@@ -13,6 +13,8 @@
 namespace Gtt\ThriftGenerator\Generator;
 
 use Gtt\ThriftGenerator\Exception\ClassNotSpecifiedException;
+use Gtt\ThriftGenerator\Exception\TransformerNotSpecifiedException;
+use Gtt\ThriftGenerator\Transformer\TransformerInterface;
 
 use \ReflectionClass;
 
@@ -31,6 +33,13 @@ class NamespaceGenerator extends AbstractGenerator
     protected $classRef;
 
     /**
+     * Transformer for namespace name
+     *
+     * @var TransformerInterface
+     */
+    protected $namespaceTransformer;
+
+    /**
      * Sets target class reflection
      *
      * @param ReflectionClass $classRef class reflection
@@ -44,6 +53,19 @@ class NamespaceGenerator extends AbstractGenerator
     }
 
     /**
+     * Sets namespace name transformer
+     *
+     * @param TransformerInterface $transformer namespace name transformer
+     *
+     * @return $this
+     */
+    public function setNamespaceTransformer(TransformerInterface $transformer)
+    {
+        $this->namespaceTransformer = $transformer;
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function generate()
@@ -52,7 +74,7 @@ class NamespaceGenerator extends AbstractGenerator
             throw new ClassNotSpecifiedException("Class to be handled is not specified");
         }
 
-        $namespace = $this->classRef->getName();
+        $namespace = $this->transformNamespace($this->classRef->getNamespaceName());
 
         return str_replace("<namespace>", $namespace, $this->getNamespaceTemplate());
     }
@@ -68,5 +90,22 @@ class NamespaceGenerator extends AbstractGenerator
 namespace php <namespace>
 EOT;
         return $namespaceTemplate;
+    }
+
+    /**
+     * Transforms namespace
+     *
+     * @param string $namespace namespace
+     *
+     * @throws TransformerNotSpecifiedException is transformer is not specified
+     *
+     * @return string
+     */
+    protected function transformNamespace($namespace)
+    {
+        if (!$this->namespaceTransformer) {
+            throw new TransformerNotSpecifiedException("Namespace", $namespace);
+        }
+        return $this->namespaceTransformer->transform($namespace);
     }
 }

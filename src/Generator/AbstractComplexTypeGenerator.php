@@ -13,6 +13,9 @@
 namespace Gtt\ThriftGenerator\Generator;
 
 use Gtt\ThriftGenerator\Exception\ClassNotSpecifiedException;
+use Gtt\ThriftGenerator\Exception\TransformerNotSpecifiedException;
+use Gtt\ThriftGenerator\Transformer\TransformerInterface;
+use Gtt\ThriftGenerator\Transformer\TypeTransformer;
 
 use ReflectionClass;
 
@@ -28,7 +31,14 @@ abstract class AbstractComplexTypeGenerator extends AbstractGenerator
      *
      * @var ReflectionClass
      */
-    protected $classRef = null;
+    protected $classRef;
+
+    /**
+     * Transformer for complex type class name
+     *
+     * @var TransformerInterface
+     */
+    protected $complexTypeNameTransformer;
 
     /**
      * Sets complex type reflection
@@ -40,6 +50,19 @@ abstract class AbstractComplexTypeGenerator extends AbstractGenerator
     public function setClass(ReflectionClass $classRef)
     {
         $this->classRef = $classRef;
+        return $this;
+    }
+
+    /**
+     * Sets complex type name transformer
+     *
+     * @param TransformerInterface $transformer complex type name transformer
+     *
+     * @return $this
+     */
+    public function setComplexTypeNameTransformer(TransformerInterface $transformer)
+    {
+        $this->complexTypeNameTransformer = $transformer;
         return $this;
     }
 
@@ -66,7 +89,7 @@ abstract class AbstractComplexTypeGenerator extends AbstractGenerator
         }
 
         $properties = implode($properties, ",\n");
-        $name       = $this->classRef->getName();
+        $name       = $this->transformName($this->classRef->getName());
 
         $search      = array("<name>", "<properties>");
         $replace     = array($name, $properties);
@@ -90,8 +113,28 @@ abstract class AbstractComplexTypeGenerator extends AbstractGenerator
     protected function getPropertyGenerator()
     {
         $generator = new PropertyGenerator();
-        $generator->setIndentation($this->getIndentation());
+        $generator
+            // passing current complexTypeNameTransformer as complex type transformer
+            ->setTypeTransformer(new TypeTransformer($this->complexTypeNameTransformer))
+            ->setIndentation($this->getIndentation());
 
         return $generator;
+    }
+
+    /**
+     * Transforms complex type name
+     *
+     * @param string $name complex type name
+     *
+     * @throws TransformerNotSpecifiedException is transformer is not specified
+     *
+     * @return string
+     */
+    protected function transformName($name)
+    {
+        if (!$this->complexTypeNameTransformer) {
+            throw new TransformerNotSpecifiedException("Complex type name", $name);
+        }
+        return $this->complexTypeNameTransformer ? $this->complexTypeNameTransformer->transform($name) : $name;
     }
 }
