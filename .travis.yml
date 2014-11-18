@@ -8,9 +8,15 @@ php:
   - hhvm
 
 before_script:
-    - composer --prefer-source --dev install
+  - composer --prefer-source --dev install
+  - wget https://phar.phpunit.de/phpcov.phar
+  - mkdir -p /tmp/tests/ThriftGenerator
 
-script: ./vendor/bin/phpunit
+script: ./vendor/bin/phpunit --coverage-clover=/tmp/tests/ThriftGenerator/coverage.clover
+
+after_script:
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover /tmp/tests/ThriftGenerator/coverage.clover
 
 git:
   depth: 5
