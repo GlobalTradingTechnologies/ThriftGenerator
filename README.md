@@ -29,7 +29,7 @@ Installation
 
 ThriftGenerator can be installed with composer quite easy:
 ```
-composer require gtt/thrift-generator 0.1.x-dev
+composer require gtt/thrift-generator 0.1.0
 ```
 You also can use ThriftGenerator as a standalone library:
 ```
