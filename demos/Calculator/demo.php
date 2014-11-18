@@ -51,7 +51,7 @@ $process = $pb
     ->getProcess();
 $process->run();
 if ($process->isSuccessful()) {
-    echo "Service classes was generated using `thrift` tool in $generatedFolder/gen-php folder\n\n";
+    echo "Service classes was generated using `thrift` compiler in $generatedFolder/gen-php folder\n\n";
 }
 
 // starting demo
