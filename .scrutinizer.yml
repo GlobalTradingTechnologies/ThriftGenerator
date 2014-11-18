@@ -3,6 +3,7 @@ inherit: true
 filter:
     excluded_paths:
         - tests/*
+        - demos/*
 
 tools:
     external_code_coverage: true
