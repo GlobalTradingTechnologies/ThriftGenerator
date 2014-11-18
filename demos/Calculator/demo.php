@@ -34,7 +34,7 @@ try{
     $generator->setClass(new ReflectionClass("Gtt\ThriftGenerator\Example\Calculator\Source\Service\Calculator"));
     $thriftFilePath = $generatedFolder."/generated.thrift";
     file_put_contents($thriftFilePath, $generator->generate());
-    echo "Thrift definition file is successfully generated using ThriftGenerator in $thriftFilePath\n";
+    echo "Thrift definition file is generated using ThriftGenerator in $thriftFilePath\n";
 } catch(\Exception $ex) {
     die("Something went wrong: ".$ex->getMessage());
 }
@@ -51,7 +51,7 @@ $process = $pb
     ->getProcess();
 $process->run();
 if ($process->isSuccessful()) {
-    echo "'thrift' tool was succeeded using $thriftFilePath file with generation classes inside $generatedFolder/gen-php folder\n\n";
+    echo "Service classes was generated using `thrift` tool in $generatedFolder/gen-php folder\n\n";
 }
 
 // starting demo
