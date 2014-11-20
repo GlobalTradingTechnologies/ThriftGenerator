@@ -36,7 +36,7 @@ try{
     file_put_contents($thriftFilePath, $generator->generate());
     echo "Thrift definition file is generated using ThriftGenerator in $thriftFilePath\n";
 } catch(\Exception $ex) {
-    die("Something went wrong: ".$ex->getMessage());
+    die("Can not generate thrift definition file: ".$ex->getMessage());
 }
 
 // Generate thrift classes
@@ -52,6 +52,8 @@ $process = $pb
 $process->run();
 if ($process->isSuccessful()) {
     echo "Service classes was generated using `thrift` compiler in $generatedFolder/gen-php folder\n\n";
+} else {
+    die("Can not compile thrift service classes: ".$process->getErrorOutput());
 }
 
 // starting demo
