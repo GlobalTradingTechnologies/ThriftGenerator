@@ -20,14 +20,16 @@ namespace Gtt\ThriftGenerator\Tests\Fixtures\Basics;
 class Test
 {
     /**
-     * returnsString Description
+     * returnsString description
      *
      * @param int $int integer param
      * @param string $string string param
+     * @param double $double double param
+     * @param float $float float param
      *
      * @return string
      */
-    public function returnsString($int, $string)
+    public function returnsString($int, $string, $double, $float)
     {
         // some logic here
     }
