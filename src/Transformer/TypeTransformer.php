@@ -29,16 +29,17 @@ class TypeTransformer implements TransformerInterface
      */
     protected static $baseTypeMap = array(
         // special type - void
-        'void' => 'void',
+        'void'    => 'void',
         // simple types
-        'bool' => 'bool',
+        'bool'    => 'bool',
         'boolean' => 'bool',
-        'float' => 'double',
-        'int' => 'i32',
+        'float'   => 'double',
+        'double'  => 'double',
+        'int'     => 'i32',
         'integer' => 'i32',
-        'string' => 'string',
+        'string'  => 'string',
         // map array to list of strings since in php we can not recognize the type of array elements from doc comments and method signature
-        'array' => "list<string>"
+        'array'   => "list<string>"
     );
 
     /**
