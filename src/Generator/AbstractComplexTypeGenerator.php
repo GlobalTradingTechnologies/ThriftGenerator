@@ -12,7 +12,7 @@
 
 namespace Gtt\ThriftGenerator\Generator;
 
-use Gtt\ThriftGenerator\Exception\ClassNotSpecifiedException;
+use Gtt\ThriftGenerator\Exception\TargetNotSpecifiedException;
 use Gtt\ThriftGenerator\Exception\TransformerNotSpecifiedException;
 use Gtt\ThriftGenerator\Transformer\TransformerInterface;
 use Gtt\ThriftGenerator\Transformer\TypeTransformer;
@@ -72,7 +72,7 @@ abstract class AbstractComplexTypeGenerator extends AbstractGenerator
     public function generate()
     {
         if (is_null($this->classRef)) {
-            throw new ClassNotSpecifiedException("Class to be handled is not specified");
+            throw new TargetNotSpecifiedException("Complex type reflection", "complex type", __CLASS__."::".__METHOD__);
         }
 
         $indentation = $this->getIndentation();
