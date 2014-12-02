@@ -50,6 +50,7 @@ abstract class AbstractComplexTypeGenerator extends AbstractGenerator
     public function setClass(ReflectionClass $classRef)
     {
         $this->classRef = $classRef;
+
         return $this;
     }
 
@@ -63,6 +64,7 @@ abstract class AbstractComplexTypeGenerator extends AbstractGenerator
     public function setComplexTypeNameTransformer(TransformerInterface $transformer)
     {
         $this->complexTypeNameTransformer = $transformer;
+
         return $this;
     }
 
@@ -75,24 +77,12 @@ abstract class AbstractComplexTypeGenerator extends AbstractGenerator
             throw new TargetNotSpecifiedException("Complex type reflection", "complex type", __CLASS__."::".__METHOD__);
         }
 
-        $indentation = $this->getIndentation();
-        $properties  = array();
-        $generator   = $this->getPropertyGenerator();
-        $identifier  = 0;
-
-        foreach ($this->classRef->getProperties(\ReflectionProperty::IS_PUBLIC) as $propertyRef) {
-            $identifier += 1;
-            $generator->setProperty($propertyRef);
-            $property     = $generator->generate();
-            $property     = "$identifier: $property";
-            $properties[] = $indentation . $property;
-        }
-
-        $properties = implode($properties, ",\n");
         $name       = $this->transformName($this->classRef->getName());
+        $properties = $this->generateProperties();
 
-        $search      = array("<name>", "<properties>");
-        $replace     = array($name, $properties);
+        $search  = array("<name>", "<properties>");
+        $replace = array($name, $properties);
+
         $complexType = str_replace($search, $replace, $this->getComplexTypeTemplate());
 
         return $complexType;
@@ -119,6 +109,42 @@ abstract class AbstractComplexTypeGenerator extends AbstractGenerator
             ->setIndentation($this->getIndentation());
 
         return $generator;
+    }
+
+    /**
+     * Generates properties
+     *
+     * @return string
+     */
+    protected function generateProperties()
+    {
+        $indentation = $this->getIndentation();
+        $properties  = array();
+        $generator   = $this->getPropertyGenerator();
+        $identifier  = 0;
+
+        foreach ($this->classRef->getProperties(\ReflectionProperty::IS_PUBLIC) as $propertyRef) {
+            $generator->setProperty($propertyRef);
+            $identifier  += 1;
+            $property     = $generator->generate();
+            $property     = "$identifier: $property";
+            $properties[] = $indentation . $property;
+        }
+
+        $properties = implode($properties, ",\n");
+        return $properties;
+    }
+
+    /**
+     * Generates complex type name
+     *
+     * @return string
+     */
+    protected function generateName()
+    {
+        $name = $this->transformName($this->classRef->getName());
+
+        return $name;
     }
 
     /**
