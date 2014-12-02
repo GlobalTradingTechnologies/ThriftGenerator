@@ -16,7 +16,8 @@ use Gtt\ThriftGenerator\Exception\TargetNotSpecifiedException;
 use Gtt\ThriftGenerator\Exception\TransformerNotSpecifiedException;
 use Gtt\ThriftGenerator\Reflection\ServiceReflection;
 use Gtt\ThriftGenerator\Reflection\MethodPrototype;
-use Gtt\ThriftGenerator\Transformer\ComplexTypeNameTransformer;
+use Gtt\ThriftGenerator\Transformer\ClassNameTransformer;
+use Gtt\ThriftGenerator\Transformer\NamespaceTransformer;
 use Gtt\ThriftGenerator\Transformer\TransformerInterface;
 use Gtt\ThriftGenerator\Transformer\TypeTransformer;
 
@@ -76,20 +77,14 @@ class ServiceGenerator extends AbstractGenerator
             throw new TargetNotSpecifiedException("service reflection", "thrift service", __CLASS__."::".__METHOD__);
         }
 
-        $methodGenerator = $this->getMethodGenerator();
-        $methods         = array();
-        /** @var MethodPrototype $methodPrototype */
-        foreach ($this->serviceReflection->getMethodPrototypes() as $methodPrototype) {
-            $methodGenerator->setMethodPrototype($methodPrototype);
-            $methods[] = $this->getIndentation().$methodGenerator->generate();
-        }
-        $methods = implode(",\n", $methods);
+        $includes  = $this->generateIncludes();
+        $namespace = $this->generateNamespace();
+        $name      = $this->transformName($this->serviceReflection->getName());
+        $methods   = $this->generateMethods();
 
-        $name = $this->transformName($this->serviceReflection->getName());
-
-        $search  = array("<name>", "<methods>");
-        $replace = array($name, $methods);
-        $service = str_replace($search, $replace, $this->getServiceTemplate());
+        $search  = array("<includes>", "<namespace>", "<name>", "<methods>");
+        $replace = array($includes, $namespace, $name, $methods);
+        $service = trim(str_replace($search, $replace, $this->getServiceTemplate()));
 
         return $service;
     }
@@ -102,6 +97,10 @@ class ServiceGenerator extends AbstractGenerator
     protected function getServiceTemplate()
     {
         $serviceTemplate = <<<EOT
+<includes>
+
+<namespace>
+
 service <name> {
 <methods>
 }
@@ -116,13 +115,43 @@ EOT;
      */
     protected function getMethodGenerator()
     {
-        $typeTransformer = new TypeTransformer(
-            new ComplexTypeNameTransformer($this->serviceReflection->getNamespaceName())
-        );
+        $complexTypeTransformer = new ClassNameTransformer();
+        $complexTypeTransformer->setCurrentNamespace($this->serviceReflection->getNamespaceName());
+
+        $typeTransformer = new TypeTransformer($complexTypeTransformer);
+
         $generator = new MethodGenerator();
         $generator
             ->setTypeTransformer($typeTransformer)
             ->setIndentation($this->getIndentation());
+        return $generator;
+    }
+
+    /**
+     * Creates and returns include list generator
+     *
+     * @return IncludeListGenerator
+     */
+    protected function getIncludeListGenerator()
+    {
+        $generator = new IncludeListGenerator();
+        $generator->setIndentation($this->getIndentation());
+
+        return $generator;
+    }
+
+    /**
+     * Creates and returns namespace generator
+     *
+     * @return NamespaceGenerator
+     */
+    protected function getNamespaceGenerator()
+    {
+        $generator = new NamespaceGenerator();
+        $generator
+            ->setNamespaceTransformer(new NamespaceTransformer())
+            ->setIndentation($this->getIndentation());
+
         return $generator;
     }
 
@@ -141,5 +170,51 @@ EOT;
             throw new TransformerNotSpecifiedException("Service name", $name);
         }
         return $this->serviceNameTransformer ? $this->serviceNameTransformer->transform($name) : $name;
+    }
+
+    /**
+     * Generates service methods
+     *
+     * @return string
+     */
+    protected function generateMethods()
+    {
+        $generator = $this->getMethodGenerator();
+        $methods   = array();
+        /** @var MethodPrototype $methodPrototype */
+        foreach ($this->serviceReflection->getMethodPrototypes() as $methodPrototype) {
+            $generator->setMethodPrototype($methodPrototype);
+            $methods[] = $this->getIndentation() . $generator->generate();
+        }
+        $methods = implode(",\n", $methods);
+        return $methods;
+    }
+
+    /**
+     * Generates includes
+     *
+     * @return string
+     */
+    protected function generateIncludes()
+    {
+        $generator = $this->getIncludeListGenerator();
+        $generator->setUsedNamespacesFromServiceReflection($this->serviceReflection);
+        $includes = $generator->generate();
+
+        return $includes;
+    }
+
+    /**
+     * Generates service namespace
+     *
+     * @return string
+     */
+    protected function generateNamespace()
+    {
+        $generator = $this->getNamespaceGenerator();
+        $generator->setNamespace($this->serviceReflection->getNamespaceName());
+        $namespace = $generator->generate();
+
+        return $namespace;
     }
 }

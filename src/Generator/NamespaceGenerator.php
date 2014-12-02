@@ -16,8 +16,6 @@ use Gtt\ThriftGenerator\Exception\TargetNotSpecifiedException;
 use Gtt\ThriftGenerator\Exception\TransformerNotSpecifiedException;
 use Gtt\ThriftGenerator\Transformer\TransformerInterface;
 
-use \ReflectionClass;
-
 /**
  * Generates thrift namespace
  *
@@ -26,11 +24,11 @@ use \ReflectionClass;
 class NamespaceGenerator extends AbstractGenerator
 {
     /**
-     * Class reflection
+     * Namespace
      *
-     * @var ReflectionClass
+     * @var string
      */
-    protected $classRef;
+    protected $namespace;
 
     /**
      * Transformer for namespace name
@@ -40,15 +38,16 @@ class NamespaceGenerator extends AbstractGenerator
     protected $namespaceTransformer;
 
     /**
-     * Sets target class reflection
+     * Sets target namespace
      *
-     * @param ReflectionClass $classRef class reflection
+     * @param string $namespace namespace
      *
      * @return $this
      */
-    public function setClass(ReflectionClass $classRef)
+    public function setNamespace($namespace)
     {
-        $this->classRef = $classRef;
+        $this->namespace = $namespace;
+
         return $this;
     }
 
@@ -70,11 +69,11 @@ class NamespaceGenerator extends AbstractGenerator
      */
     public function generate()
     {
-        if (is_null($this->classRef)) {
-            throw new TargetNotSpecifiedException("class reflection", "namespace", __CLASS__."::".__METHOD__);
+        if (is_null($this->namespace)) {
+            throw new TargetNotSpecifiedException("namespace", "namespace", __CLASS__."::".__METHOD__);
         }
 
-        $namespace = $this->transformNamespace($this->classRef->getNamespaceName());
+        $namespace = $this->transformNamespace($this->namespace);
 
         return str_replace("<namespace>", $namespace, $this->getNamespaceTemplate());
     }
