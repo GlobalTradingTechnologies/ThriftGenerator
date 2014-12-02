@@ -75,42 +75,13 @@ class MethodGenerator extends AbstractGenerator
             throw new TargetNotSpecifiedException("method prototype reflection", "method", __CLASS__."::".__METHOD__);
         }
 
-        $returnType = $this->transformType($this->methodPrototype->getReturnType());
-        $methodName = $this->methodPrototype->getMethodReflection()->getName();
-
-        // parameters
-        $parameters = array();
-        $identifier = 0;
-        /** @var ZendReflectionParameter $parameterRef */
-        foreach ($this->methodPrototype->getParameters() as $parameterRef) {
-            $identifier   += 1;
-            $parameterType = $this->transformType($parameterRef->getType());
-            $parameterName = $parameterRef->getName();
-            $parameters[]  = "$identifier:$parameterType $parameterName";
-        }
-        $parameters = "(".implode(", ", $parameters).")";
-
-        //exceptions
-        $exceptionRefs = $this->methodPrototype->getExceptions();
-        $exceptions    = "";
-        if ($exceptionRefs) {
-            $identifier = 0;
-            $exceptions = array();
-            foreach ($exceptionRefs as $exceptionRef) {
-                $identifier   += 1;
-                $exceptionType = $this->transformType($exceptionRef->getName());
-                $exceptionName = $this->generateExceptionName(
-                    $this->methodPrototype->getMethodReflection()->getDeclaringClass()->getName(),
-                    $this->methodPrototype->getMethodReflection()->getName(),
-                    $exceptionType
-                );
-                $exceptions[] = "$identifier:$exceptionType $exceptionName";
-            }
-            $exceptions = " throws (".implode(", ", $exceptions).")";
-        }
+        $return     = $this->generateReturn();
+        $name       = $this->generateMethodName();
+        $parameters = $this->generateParameters();
+        $exceptions = $this->generateExceptions();
 
         $search  = array("<return>", "<name>", "<parameters>", "<exceptions>");
-        $replace = array($returnType, $methodName, $parameters, $exceptions);
+        $replace = array($return, $name, $parameters, $exceptions);
         $method  = str_replace($search, $replace, $this->getMethodTemplate());
 
         return $method;
@@ -150,14 +121,83 @@ EOT;
      * Generates exception name
      * TODO rethink that (what name for exceptions in methods should be?)
      *
-     * @param string $className class name
-     * @param string $methodName method name
-     * @param string $exceptionType converted thrift exception type
+     * @param \ReflectionClass $exceptionRef class name
      *
      * @return string
      */
-    protected function generateExceptionName($className, $methodName, $exceptionType)
+    protected function generateExceptionName(\ReflectionClass $exceptionRef)
     {
-        return implode("_", array($this->transformType($className), $methodName, $exceptionType));
+        return $exceptionRef->getShortName();
+    }
+
+    /**
+     * Generates return statement
+     *
+     * @return string
+     */
+    protected function generateReturn()
+    {
+        $return = $this->transformType($this->methodPrototype->getReturnType());
+
+        return $return;
+    }
+
+    /**
+     * Generates method name
+     *
+     * @return string
+     */
+    protected function generateMethodName()
+    {
+        $methodName = $this->methodPrototype->getMethodReflection()->getName();
+
+        return $methodName;
+    }
+
+    /**
+     * Generates method parameters
+     *
+     * @return string
+     */
+    protected function generateParameters()
+    {
+        $parameters = array();
+        $identifier = 0;
+        /** @var ZendReflectionParameter $parameterRef */
+        foreach ($this->methodPrototype->getParameters() as $parameterRef) {
+            $identifier   += 1;
+            $parameterType = $this->transformType($parameterRef->getType());
+            $parameterName = $parameterRef->getName();
+            $parameters[]  = "$identifier:$parameterType $parameterName";
+        }
+        $parameters = "(" . implode(", ", $parameters) . ")";
+
+        return $parameters;
+    }
+
+    /**
+     * Generates exceptions can be thrown inside the method
+     *
+     * @return string
+     */
+    protected function generateExceptions()
+    {
+        $exceptionRefs = $this->methodPrototype->getExceptions();
+
+        $exceptions = "";
+        if ($exceptionRefs) {
+            $identifier = 0;
+            $exceptions = array();
+            foreach ($exceptionRefs as $exceptionRef) {
+                $identifier   += 1;
+                $exceptionType = $this->transformType($exceptionRef->getName());
+                $exceptionName = $this->generateExceptionName($exceptionRef);
+                $exceptions[]  = "$identifier:$exceptionType $exceptionName";
+            }
+            $exceptions = " throws (" . implode(", ", $exceptions) . ")";
+            return $exceptions;
+        }
+
+        return $exceptions;
     }
 }
