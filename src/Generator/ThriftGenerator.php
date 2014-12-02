@@ -12,8 +12,8 @@
 
 namespace Gtt\ThriftGenerator\Generator;
 
+use Gtt\ThriftGenerator\Exception\TargetNotSpecifiedException;
 use Gtt\ThriftGenerator\Reflection\ServiceReflection;
-use Gtt\ThriftGenerator\Exception\ClassNotSpecifiedException;
 use Gtt\ThriftGenerator\Transformer\ComplexTypeNameTransformer;
 use Gtt\ThriftGenerator\Transformer\NamespaceTransformer;
 use Gtt\ThriftGenerator\Transformer\ServiceNameTransformer;
@@ -61,7 +61,7 @@ class ThriftGenerator extends AbstractGenerator
     public function generate()
     {
         if (is_null($this->classRef)) {
-            throw new ClassNotSpecifiedException("Class to be handled is not specified");
+            throw new ClassNotSpecifiedException("class reflection", "service", __CLASS__."::".__METHOD__);
         }
 
         $this->serviceReflection = new ServiceReflection($this->classRef->getName());

@@ -12,7 +12,7 @@
 
 namespace Gtt\ThriftGenerator\Generator;
 
-use Gtt\ThriftGenerator\Exception\MethodNotSpecifiedException;
+use Gtt\ThriftGenerator\Exception\TargetNotSpecifiedException;
 use Gtt\ThriftGenerator\Exception\TransformerNotSpecifiedException;
 use Gtt\ThriftGenerator\Reflection\MethodPrototype;
 use Gtt\ThriftGenerator\Transformer\TransformerInterface;
@@ -72,7 +72,7 @@ class MethodGenerator extends AbstractGenerator
     public function generate()
     {
         if (is_null($this->methodPrototype)) {
-            throw new MethodNotSpecifiedException("Method to be handled is not specified");
+            throw new TargetNotSpecifiedException("method prototype reflection", "method", __CLASS__."::".__METHOD__);
         }
 
         $returnType = $this->transformType($this->methodPrototype->getReturnType());

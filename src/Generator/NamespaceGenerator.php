@@ -12,7 +12,7 @@
 
 namespace Gtt\ThriftGenerator\Generator;
 
-use Gtt\ThriftGenerator\Exception\ClassNotSpecifiedException;
+use Gtt\ThriftGenerator\Exception\TargetNotSpecifiedException;
 use Gtt\ThriftGenerator\Exception\TransformerNotSpecifiedException;
 use Gtt\ThriftGenerator\Transformer\TransformerInterface;
 
@@ -71,7 +71,7 @@ class NamespaceGenerator extends AbstractGenerator
     public function generate()
     {
         if (is_null($this->classRef)) {
-            throw new ClassNotSpecifiedException("Class to be handled is not specified");
+            throw new TargetNotSpecifiedException("class reflection", "namespace", __CLASS__."::".__METHOD__);
         }
 
         $namespace = $this->transformNamespace($this->classRef->getNamespaceName());

@@ -14,6 +14,7 @@ namespace Gtt\ThriftGenerator\Generator;
 
 use Gtt\ThriftGenerator\Exception\InvalidClassStructureException;
 use Gtt\ThriftGenerator\Exception\PropertyNotSpecifiedException;
+use Gtt\ThriftGenerator\Exception\TargetNotSpecifiedException;
 use Gtt\ThriftGenerator\Exception\TransformerNotSpecifiedException;
 use Gtt\ThriftGenerator\Exception\UnsupportedDefaultValueException;
 use Gtt\ThriftGenerator\Transformer\TransformerInterface;
@@ -87,7 +88,7 @@ class PropertyGenerator extends AbstractGenerator
     public function generate()
     {
         if (is_null($this->propertyRef)) {
-            throw new PropertyNotSpecifiedException("Property to be handled is not specified");
+            throw new TargetNotSpecifiedException("property reflection", "class property", __CLASS__."::".__METHOD__);
         }
 
         $propertyType       = $this->getPropertyType();
