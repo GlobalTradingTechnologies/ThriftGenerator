@@ -10,25 +10,25 @@
  * Date: 10/16/14
  */
 
-namespace Gtt\ThriftGenerator\Tests\Fixtures\Structs;
+namespace Gtt\ThriftGenerator\Tests\Fixtures\Structs\PHP;
 
 /**
  * Test class to test thrift structs support
  *
  * @author fduch <alex.medwedew@gmail.com>
  */
-class Test
+class Service
 {
     /**
      * receivesDTOandReturnsDTO description
      *
      * @param int $int integer param
      * @param string $string string param
-     * @param \Gtt\ThriftGenerator\Tests\Fixtures\Structs\DTO\DTO2 $dto2 $dto2
+     * @param \Gtt\ThriftGenerator\Tests\Fixtures\Structs\PHP\DTO\DTO2 $dto2 $dto2
      *
-     * @return \Gtt\ThriftGenerator\Tests\Fixtures\Structs\DTO\DTO1 result
+     * @return \Gtt\ThriftGenerator\Tests\Fixtures\Structs\PHP\DTO\DTO1 result
      */
-    public function receivesDTOAndReturnsDTO($int, $string, \Gtt\ThriftGenerator\Tests\Fixtures\Structs\DTO\DTO2 $dto2)
+    public function receivesDTOAndReturnsDTO($int, $string, \Gtt\ThriftGenerator\Tests\Fixtures\Structs\PHP\DTO\DTO2 $dto2)
     {
         // some logic here
     }

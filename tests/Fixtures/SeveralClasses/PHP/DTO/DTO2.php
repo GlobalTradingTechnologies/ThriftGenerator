@@ -10,10 +10,10 @@
  * Date: 10/16/14
  */
 
-namespace Gtt\ThriftGenerator\Tests\Fixtures\Structs\DTO;
+namespace Gtt\ThriftGenerator\Tests\Fixtures\SeveralClasses\PHP\DTO;
 
 /**
- * Data transfer object used to test thrift service structs support
+ * Data transfer object fixture
  *
  * @author fduch <alex.medwedew@gmail.com>
  */
@@ -36,7 +36,7 @@ class DTO2
     /**
      * Third parameter with folded complex type without default value
      *
-     * @var \Gtt\ThriftGenerator\Tests\Fixtures\Structs\DTO\DTO2
+     * @var \Gtt\ThriftGenerator\Tests\Fixtures\SeveralClasses\PHP\DTO\DTO3
      */
     public $three;
 

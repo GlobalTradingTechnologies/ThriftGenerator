@@ -10,7 +10,7 @@
  * Date: 10/16/14
  */
 
-namespace Gtt\ThriftGenerator\Tests\Fixtures\Exceptions\DTO;
+namespace Gtt\ThriftGenerator\Tests\Fixtures\Exceptions\PHP\DTO;
 
 /**
  * Data transfer object used to test exceptions support
@@ -22,14 +22,14 @@ class DTO1
     /**
      * First property with folded complex type without default value
      *
-     * @var \Gtt\ThriftGenerator\Tests\Fixtures\Exceptions\DTO\DTO1
+     * @var \Gtt\ThriftGenerator\Tests\Fixtures\Exceptions\PHP\DTO\DTO1
      */
     public $one;
 
     /**
      * Second property with complex type with default null value
      *
-     * @var \Gtt\ThriftGenerator\Tests\Fixtures\Exceptions\DTO\DTO2[]
+     * @var \Gtt\ThriftGenerator\Tests\Fixtures\Exceptions\PHP\DTO\DTO2[]
      */
     public $two = null;
 

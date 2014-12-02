@@ -10,14 +10,14 @@
  * Date: 10/16/14
  */
 
-namespace Gtt\ThriftGenerator\Tests\Fixtures\Basics;
+namespace Gtt\ThriftGenerator\Tests\Fixtures\Basics\PHP;
 
 /**
  * Test class to test the thrift file generations basics
  *
  * @author fduch <alex.medwedew@gmail.com>
  */
-class Test
+class Service
 {
     /**
      * returnsString description

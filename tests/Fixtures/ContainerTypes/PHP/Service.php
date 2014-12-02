@@ -10,21 +10,21 @@
  * Date: 10/16/14
  */
 
-namespace Gtt\ThriftGenerator\Tests\Fixtures\ContainerTypes;
+namespace Gtt\ThriftGenerator\Tests\Fixtures\ContainerTypes\PHP;
 
 /**
  * Test class to test container types support
  *
  * @author fduch <alex.medwedew@gmail.com>
  */
-class Test
+class Service
 {
     /**
      * receivesListOfDTOsAndReturnsListOfDTOs description
      *
-     * @param \Gtt\ThriftGenerator\Tests\Fixtures\ContainerTypes\DTO\DTO1[] $listOfDTOs list of DTOs
+     * @param \Gtt\ThriftGenerator\Tests\Fixtures\ContainerTypes\PHP\DTO\DTO1[] $listOfDTOs list of DTOs
      *
-     * @return \Gtt\ThriftGenerator\Tests\Fixtures\ContainerTypes\DTO\DTO1[] result
+     * @return \Gtt\ThriftGenerator\Tests\Fixtures\ContainerTypes\PHP\DTO\DTO1[] result
      */
     public function receivesListOfDTOsAndReturnsListOfDTOs($listOfDTOs)
     {

@@ -10,14 +10,14 @@
  * Date: 10/16/14
  */
 
-namespace Gtt\ThriftGenerator\Tests\Fixtures\Exceptions\Exception;
+namespace Gtt\ThriftGenerator\Tests\Fixtures\Structs\PHP\DTO;
 
 /**
- * Test class to test exceptions support
+ * Data transfer object used to test thrift service structs support
  *
  * @author fduch <alex.medwedew@gmail.com>
  */
-class TestException extends \Exception
+class DTO1
 {
     /**
      * First property with string type with default integer value
@@ -29,14 +29,14 @@ class TestException extends \Exception
     /**
      * Second property with folded complex type without default value
      *
-     * @var \Gtt\ThriftGenerator\Tests\Fixtures\Exceptions\DTO\DTO1
+     * @var \Gtt\ThriftGenerator\Tests\Fixtures\Structs\PHP\DTO\DTO1
      */
     public $two;
 
     /**
      * Third property with complex type with default null value
      *
-     * @var \Gtt\ThriftGenerator\Tests\Fixtures\Exceptions\DTO\DTO2[]
+     * @var \Gtt\ThriftGenerator\Tests\Fixtures\Structs\PHP\DTO\DTO2
      */
     public $three = null;
 

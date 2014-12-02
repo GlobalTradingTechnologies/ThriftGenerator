@@ -10,10 +10,10 @@
  * Date: 10/16/14
  */
 
-namespace Gtt\ThriftGenerator\Tests\Fixtures\ContainerTypes\DTO;
+namespace Gtt\ThriftGenerator\Tests\Fixtures\Exceptions\PHP\DTO;
 
 /**
- * Data transfer object used to test container types support
+ * Data transfer object used to test exceptions support
  *
  * @author fduch <alex.medwedew@gmail.com>
  */
@@ -22,7 +22,7 @@ class DTO2
     /**
      * First property with folded complex type
      *
-     * @var \Gtt\ThriftGenerator\Tests\Fixtures\ContainerTypes\DTO\DTO2[]
+     * @var \Gtt\ThriftGenerator\Tests\Fixtures\Exceptions\PHP\DTO\DTO2[]
      */
     public $one;
 }

@@ -13,8 +13,10 @@
 namespace Gtt\ThriftGenerator\Tests;
 
 use Gtt\ThriftGenerator\Generator\ThriftGenerator;
-
+use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\visitor\vfsStreamStructureVisitor;
 use PHPUnit_Framework_TestCase;
+use Zend\Code\Reflection\FileReflection;
 
 /**
  * Integration test for generator
@@ -37,23 +39,29 @@ class GeneratorTest extends PHPUnit_Framework_TestCase
      * @test
      * @dataProvider getIntegrationTest
      */
-    public function testIntegration($classRef, $expectedThriftFile)
+    public function testIntegration($classRefs, $expectThriftDir)
     {
-        $this->generator->setClass($classRef);
-        $generatedThriftContent = $this->generator->generate();
-        $this->assertStringEqualsFile($expectedThriftFile, $generatedThriftContent);
+        $outputDir = vfsStream::setup('root');
+        $this->generator
+            ->setOutputDir(vfsStream::url('root'))
+            ->setClasses($classRefs);
+        $this->generator->generate();
+
+        $generatedStructure = vfsStream::inspect(new vfsStreamStructureVisitor(), $outputDir)->getStructure();
+        $generatedStructure = $generatedStructure['root'];
+        $expectedStructure  = $this->convertDirectoryToArray($expectThriftDir);
+
+        // sort structures
+        $this->ksortRecursive($generatedStructure);
+        $this->ksortRecursive($expectedStructure);
+
+        $this->assertEquals($expectedStructure, $generatedStructure);
     }
 
     /**
-     * Traverses directories (not recursively) inside Fixtures folder
-     * and looks for Test.php and thrift.thrift files inside such each directory.
-     * Test.php - can contain class for service definition generation and thrift.thrift -
-     * expected thrift definition for this class.
-     * Test.php may contain classes in future when library would
-     * support thrift file generation base on several input classes. Now it supports
-     * thrift file generation based on one class
+     * Provides arrays with reflection classes and directory with expected thrift definitions
      *
-     * @return array of arrays with reflection class and expected thrift file content
+     * @return array
      */
     public function getIntegrationTest()
     {
@@ -63,18 +71,71 @@ class GeneratorTest extends PHPUnit_Framework_TestCase
         foreach (new \DirectoryIterator($fixturesDir) as $directory) {
             if ($directory->isDir() && !$directory->isDot()) {
                 $testDirectoryPath = $directory->getPathname();
-                if (file_exists($expectedThriftFile = $testDirectoryPath.DIRECTORY_SEPARATOR."thrift.thrift") &&
-                    file_exists($serviceFileName = $testDirectoryPath.DIRECTORY_SEPARATOR."Test.php")) {
-                    $serviceClassName = implode(
-                        "\\",
-                        array(__NAMESPACE__, 'Fixtures', $directory->getFilename(), "Test")
-                    );
-                    $testData[] = array(new \ReflectionClass($serviceClassName), $expectedThriftFile);
+
+                $classesDir = $testDirectoryPath.DIRECTORY_SEPARATOR."PHP";
+                $thriftDir  = $testDirectoryPath.DIRECTORY_SEPARATOR."thrift";
+
+                $serviceClassesRefs = array();
+                if (is_dir($classesDir) && is_dir($thriftDir)) {
+                    // test case folder is valid
+                    // recursively iterate through classesDir in order to collect 'services' (classes with names starting with 'Service')
+                    $classesDirIterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($classesDir));
+                    $regexIterator = new \RegexIterator($classesDirIterator, '/^.+\/Service[^\/]*\.php$/i', \RecursiveRegexIterator::GET_MATCH);
+                    foreach($regexIterator as $service) {
+                        // fetch service reflection
+                        $serviceFileZendReflection = new FileReflection($service[0], true);
+                        $serviceClassesRefs[]      = $serviceFileZendReflection->getClass();
+                    }
+                    $testData[] = array($serviceClassesRefs, $thriftDir);
                 }
             }
         }
 
         return $testData;
+    }
+
+    /**
+     * Converts filesystem directory to array
+     *
+     * @param string $dir path to dir
+     *
+     * @return array
+     */
+    protected function convertDirectoryToArray($dir)
+    {
+        $array       = array();
+        $dirIterator = new \DirectoryIterator($dir);
+
+        foreach ($dirIterator as $node) {
+            if (!$node->isDot()) {
+                if ($node->isDir()) {
+                    $array[$node->getFilename()] = $this->convertDirectoryToArray($node->getPathname());
+                } elseif ($node->isFile()) {
+                    $array[$node->getFilename()] = file_get_contents($node->getPathname());
+                }
+            }
+        }
+
+        return $array;
+    }
+
+    /**
+     * Recursive ksort
+     *
+     * @param $array
+     *
+     * @return bool
+     */
+    protected function ksortRecursive($array)
+    {
+        if (!is_array($array)) {
+            return false;
+        }
+        ksort($array);
+        foreach ($array as &$arr) {
+            $this->ksortRecursive($arr);
+        }
+        return true;
     }
 }
  

@@ -10,7 +10,7 @@
  * Date: 10/16/14
  */
 
-namespace Gtt\ThriftGenerator\Tests\Fixtures\Exceptions;
+namespace Gtt\ThriftGenerator\Tests\Fixtures\Exceptions\PHP;
 
 /**
  * Test class to test exceptions support. All folded complex types (from exceptions and other complex types from
@@ -18,17 +18,17 @@ namespace Gtt\ThriftGenerator\Tests\Fixtures\Exceptions;
  *
  * @author fduch <alex.medwedew@gmail.com>
  */
-class Test
+class Service
 {
     /**
      * throwsException description
      *
      * @param int $int integer param
-     * @param \Gtt\ThriftGenerator\Tests\Fixtures\Exceptions\DTO\DTO1 $complex complex param
+     * @param \Gtt\ThriftGenerator\Tests\Fixtures\Exceptions\PHP\DTO\DTO1 $complex complex param
      *
-     * @throws \Gtt\ThriftGenerator\Tests\Fixtures\Exceptions\Exception\TestException in case of some failure
+     * @throws \Gtt\ThriftGenerator\Tests\Fixtures\Exceptions\PHP\Exception\TestException in case of some failure
      *
-     * @return \Gtt\ThriftGenerator\Tests\Fixtures\Exceptions\DTO\DTO1[] result
+     * @return \Gtt\ThriftGenerator\Tests\Fixtures\Exceptions\PHP\DTO\DTO1[] result
      */
     public function throwsException($int, $test)
     {
