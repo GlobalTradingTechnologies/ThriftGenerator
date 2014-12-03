@@ -18,6 +18,7 @@ use Symfony\Component\Process\ProcessBuilder;
 
 use ReflectionClass;
 
+define(THRIFT_COMPILER_VERSION_REQUIRED, "0.9.2");
 
 ini_set('display_errors', true);
 
@@ -81,9 +82,11 @@ function checkEnv($thriftGeneratedFolder, $phpGeneratedFolder)
     // Check thrift is installed
     $process = new Process('thrift --version');
     $process->run();
-    // we cannot use isSuccessful method since thrift exit code is 1 for some regular commands like '--version'. Really weird
-    if (strpos($process->getOutput(), "Thrift version") !== 0) {
-        throw new \RuntimeException('thrift is required to launch the demo');
+
+    $processOutput = $process->getOutput();
+    preg_match("/^Thrift version (?P<version>.+)[\s]?$/", $processOutput, $matches);
+    if (!$matches || version_compare($matches['version'], THRIFT_COMPILER_VERSION_REQUIRED, "<")) {
+        throw new \RuntimeException('thrift compiler (version '.THRIFT_COMPILER_VERSION_REQUIRED.' or higher) is required to launch the demo');
     }
 
     // Check server is available
