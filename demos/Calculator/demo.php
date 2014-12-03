@@ -13,8 +13,8 @@
 namespace Gtt\ThriftGenerator\Example\Calculator;
 
 use Gtt\ThriftGenerator\Generator\ThriftGenerator;
-
 use Symfony\Component\Process\Process;
+use Symfony\Component\Process\ProcessBuilder;
 
 use ReflectionClass;
 
@@ -24,34 +24,44 @@ ini_set('display_errors', true);
 include __DIR__ . '/../autoload.php';
 
 $generatedFolder = __DIR__."/Generated";
+$thriftGeneratedFolder = $generatedFolder."/thrift";
+$phpGeneratedFolder = $generatedFolder."/PHP";
 
 // Check the requirements
-checkEnv();
+checkEnv($thriftGeneratedFolder, $phpGeneratedFolder);
 
-// Generate thrift file
+// Generate thrift definition files
+mkdir($thriftGeneratedFolder);
 try{
+    $className = "Gtt\ThriftGenerator\Example\Calculator\Source\Service\Calculator";
+
     $generator = new ThriftGenerator();
-    $generator->setClass(new ReflectionClass("Gtt\ThriftGenerator\Example\Calculator\Source\Service\Calculator"));
-    $thriftFilePath = $generatedFolder."/generated.thrift";
-    file_put_contents($thriftFilePath, $generator->generate());
-    echo "Thrift definition file is generated using ThriftGenerator in $thriftFilePath\n";
+    $generator
+        ->setClasses(array(new ReflectionClass($className)))
+        ->setOutputDir($thriftGeneratedFolder);
+    $generator->generate();
+    echo "Thrift definition files are generated using ThriftGenerator in $generatedFolder\n";
 } catch(\Exception $ex) {
-    die("Can not generate thrift definition file: ".$ex->getMessage());
+    die("Can not generate thrift definition files: ".$ex->getMessage());
 }
 
 // Generate thrift classes
-$pb = new \Symfony\Component\Process\ProcessBuilder();
+mkdir($phpGeneratedFolder);
+$serviceName        = str_replace("\\", ".", $className);
+$serviceFileName    = $thriftGeneratedFolder."/".$serviceName.".thrift";
+$pb = new ProcessBuilder();
 $process = $pb
     ->setPrefix("thrift")
     ->setArguments(array(
-        "-o", $generatedFolder,
-        "--gen", "php:server,oop,rest",
-        $thriftFilePath
+        "-r",
+        "--out", $phpGeneratedFolder,
+        "--gen", "php:server,oop,nsglobal=Demo\\Generated",
+        $serviceFileName
     ))
     ->getProcess();
 $process->run();
 if ($process->isSuccessful()) {
-    echo "Service classes was generated using `thrift` compiler in $generatedFolder/gen-php folder\n\n";
+    echo "Service classes was generated using `thrift` compiler in $generatedFolder folder\n\n";
 } else {
     die("Can not compile thrift service classes: ".$process->getErrorOutput());
 }
@@ -62,8 +72,11 @@ include __DIR__."/Client/Client.php";
 
 /**
  * Checks base demo launch requirements
+ *
+ * @param string $thriftGeneratedFolder folder for generated thrift files (by ThriftGenerator). Should not exist before demo launch
+ * @param string $phpGeneratedFolder folder for generated PHP code (by thrift compiler). Should not exist before demo launch
  */
-function checkEnv()
+function checkEnv($thriftGeneratedFolder, $phpGeneratedFolder)
 {
     // Check thrift is installed
     $process = new Process('thrift --version');
@@ -79,5 +92,15 @@ function checkEnv()
         throw new \RuntimeException("Connection to localhost:8080 cannot be established\n".
             "Please start web server listening 8080 port with document root located at ./Server folder\n"
         );
+    }
+
+    if (is_dir($thriftGeneratedFolder)) {
+        throw new \RuntimeException("$thriftGeneratedFolder should not exist to launch thrift definition generation. ".
+            "Consider to remove it if you perform repeated demo launch");
+    }
+
+    if (is_dir($phpGeneratedFolder)) {
+        throw new \RuntimeException("$phpGeneratedFolder should not exist to launch thrift compilation. ".
+            "Consider to remove it if you perform repeated demo launch");
     }
 }

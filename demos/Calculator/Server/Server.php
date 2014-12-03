@@ -21,20 +21,20 @@ use Gtt\ThriftGenerator\Example\Calculator\Source\Struct\Operation;
 
 // thrift autoload from gen-php folder
 $thriftLibDir = __DIR__."/../../../vendor/apache/thrift";
-$GEN_DIR      = realpath(dirname(__FILE__).'/../Generated').'/gen-php';
+$GEN_DIR      = realpath(dirname(__FILE__).'/../Generated/PHP');
 require_once $thriftLibDir.'/lib/php/lib/Thrift/ClassLoader/ThriftClassLoader.php';
 
 use Thrift\ClassLoader\ThriftClassLoader;
 
-use Gtt\ThriftGenerator\Example\Calculator\Source\Service\StructWork;
-use Gtt\ThriftGenerator\Example\Calculator\Source\Service\ExceptionInvalidOperation;
+use Demo\Generated\Gtt\ThriftGenerator\Example\Calculator\Source\Struct\Work;
+use Demo\Generated\Gtt\ThriftGenerator\Example\Calculator\Source\Exception\InvalidOperation;
 
-use Gtt\ThriftGenerator\Example\Calculator\Source\Service\CalculatorProcessor;
-use Gtt\ThriftGenerator\Example\Calculator\Source\Service\CalculatorIf;
+use Demo\Generated\Gtt\ThriftGenerator\Example\Calculator\Source\Service\CalculatorProcessor;
+use Demo\Generated\Gtt\ThriftGenerator\Example\Calculator\Source\Service\CalculatorIf;
 
 $loader = new ThriftClassLoader();
 $loader->registerNamespace('Thrift', $thriftLibDir.'/lib/php/lib');
-$loader->registerDefinition('Gtt\ThriftGenerator\Example\Calculator\Source\Service', $GEN_DIR);
+$loader->registerDefinition('Demo\Generated', $GEN_DIR);
 $loader->register();
 
 /*
@@ -81,8 +81,8 @@ class CalculatorHandler implements CalculatorIf {
     return $num1 + $num2;
   }
 
-  public function calculate($logid, StructWork $w) {
-    error_log("calculate({$logid}, {{$w->op}, {$w->num1}, {$w->num2}})");
+  public function calculate($logid, Work $w) {
+    error_log("calculate({$logid}, {$w->op}, {$w->num1}, {$w->num2}})");
     switch ($w->op) {
         case Operation::ADD:
             $val = $w->num1 + $w->num2;
@@ -95,7 +95,7 @@ class CalculatorHandler implements CalculatorIf {
             break;
         case Operation::DIVIDE:
             if ($w->num2 == 0) {
-                $io = new ExceptionInvalidOperation();
+                $io = new InvalidOperation();
                 $io->what = $w->op;
                 $io->why = "Cannot divide by 0";
                 throw $io;
@@ -103,7 +103,7 @@ class CalculatorHandler implements CalculatorIf {
             $val = $w->num1 / $w->num2;
             break;
         default:
-            $io = new ExceptionInvalidOperation();
+            $io = new InvalidOperation();
             $io->what = $w->op;
             $io->why = "Invalid Operation";
             throw $io;
