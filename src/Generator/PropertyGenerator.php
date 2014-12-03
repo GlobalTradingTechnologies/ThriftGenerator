@@ -88,21 +88,12 @@ class PropertyGenerator extends AbstractGenerator
             throw new TargetNotSpecifiedException("property reflection", "class property", __CLASS__."::".__METHOD__);
         }
 
-        $propertyType       = $this->getPropertyType();
-        $thriftPropertyType = $this->transformType($propertyType);
-        $propertyName       = $this->propertyRef->getName();
-
-        $default = "";
-        if ($this->hasDefaultValue()) {
-            $defaultValue = $this->generateDefaultValue(
-                $this->propertyRef->getDeclaringClass()->getName(),
-                $propertyName
-            );
-            $default = " = $defaultValue";
-        }
+        $type    = $this->transformType($this->getPropertyType());
+        $name    = $this->propertyRef->getName();
+        $default = $this->generateDefault($name);
 
         $search   = array('<type>', '<name>', '<default>');
-        $replace  = array($thriftPropertyType, $propertyName, $default);
+        $replace  = array($type, $name, $default);
         $property = str_replace($search, $replace, $this->getPropertyTemplate());
 
         return $property;
@@ -148,6 +139,44 @@ EOT;
     }
 
     /**
+     * Transforms PHP type to thrift type
+     *
+     * @param string $type PHP type
+     *
+     * @throws TransformerNotSpecifiedException is transformer is not specified
+     *
+     * @return string thrift type
+     */
+    protected function transformType($type)
+    {
+        if (!$this->typeTransformer) {
+            throw new TransformerNotSpecifiedException("Type", $type);
+        }
+        return $this->typeTransformer->transform($type);
+    }
+
+    /**
+     * Generate property default if it has the one
+     *
+     * @param string $propertyName property name
+     *
+     * @return string
+     */
+    protected function generateDefault($propertyName)
+    {
+        $default = "";
+        if ($this->hasDefaultValue()) {
+            $defaultValue = $this->generateDefaultValue(
+                $this->propertyRef->getDeclaringClass()->getName(),
+                $propertyName
+            );
+            $default = " = $defaultValue";
+            return $default;
+        }
+        return $default;
+    }
+
+    /**
      * Checks that property has default value
      *
      * @return bool
@@ -181,22 +210,5 @@ EOT;
         // TODO should we do something with booleans?
 
         return $generatedDefaultValue;
-    }
-
-    /**
-     * Transforms PHP type to thrift type
-     *
-     * @param string $type PHP type
-     *
-     * @throws TransformerNotSpecifiedException is transformer is not specified
-     *
-     * @return string thrift type
-     */
-    protected function transformType($type)
-    {
-        if (!$this->typeTransformer) {
-            throw new TransformerNotSpecifiedException("Type", $type);
-        }
-        return $this->typeTransformer->transform($type);
     }
 }
