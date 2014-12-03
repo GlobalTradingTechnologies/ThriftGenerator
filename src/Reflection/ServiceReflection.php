@@ -197,7 +197,7 @@ class ServiceReflection extends ComplexTypeReflection
                 }
             }
         }
-        $this->exceptionRefs = $exceptions;
+        $this->exceptionRefs = array_values($exceptions);
     }
 
     /**
@@ -255,6 +255,6 @@ class ServiceReflection extends ComplexTypeReflection
             }
         }
 
-        $this->structRefs = $structRefs;
+        $this->structRefs = array_values($structRefs);
     }
 }

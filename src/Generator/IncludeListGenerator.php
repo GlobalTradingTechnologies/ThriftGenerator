@@ -76,7 +76,7 @@ class IncludeListGenerator extends AbstractGenerator
      */
     public function setUsedNamespacesFromServiceReflection(ServiceReflection $serviceReflection)
     {
-        $complexTypes = $serviceReflection->getStructs() + $serviceReflection->getExceptions();
+        $complexTypes = array_merge($serviceReflection->getStructs(), $serviceReflection->getExceptions());
 
         $namespacesUsed = array();
         foreach ($complexTypes as $complexType) {

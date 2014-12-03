@@ -146,7 +146,15 @@ class ThriftGenerator
         /** @var ComplexTypeReflection[] $complexTypeRefs */
         $complexTypeRefs = array();
         foreach ($serviceReflections as $serviceReflection) {
-            $complexTypeRefs = $complexTypeRefs + $serviceReflection->getStructs() + $serviceReflection->getExceptions();
+            /** @var ComplexTypeReflection[] $complexTypes list of service complex types */
+            $complexTypes = array_merge($serviceReflection->getStructs(), $serviceReflection->getExceptions());
+            // add to list of complex types only unique complex types
+            foreach ($complexTypes as $complexType) {
+                $name = $complexType->getName();
+                if (!isset($complexTypeRefs[$name])) {
+                    $complexTypeRefs[$name] = $complexType;
+                }
+            }
         }
 
         // collect recursively all the complex types used inside original classes specified
