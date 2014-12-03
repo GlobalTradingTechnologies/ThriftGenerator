@@ -22,7 +22,8 @@ ThriftGenerator uses class reflection and doc-blocks to introspect class signatu
 Requirements
 ===================
 
-ThriftGenerator works with PHP classes and requires PHP 5.3 or higher.
+ThriftGenerator works with PHP classes and requires PHP 5.3 or higher and provides thrift definition files
+can be used by thrift compiler 0.9.2 and higher.
 
 Installation
 ===================
@@ -46,9 +47,15 @@ ThriftGenerator has handy OOP interface:
 use Gtt\ThriftGenerator\Generator\ThriftGenerator;
 
 $generator = new ThriftGenerator();
-// set class that should be introspected in order to generate thrift file with it definition
-$generator->setClass(new ReflectionClass("\Your\Class\Name"));
-file_put_contents('<path to thrift file>', $generator->generate());
+// set classes that should be introspected in order to generate thrift file with it definition and output dir
+$generator
+    ->setClasses(
+        array(
+            new ReflectionClass("\Your\Class\Name"),
+            new ReflectionClass("\Another\Class\Name")
+        )
+    )
+    ->setOutputDir("<path to folder that will contain generated thrift definitions>");
 ```
 
 See also [demos](demos) and [functional test cases](tests/Fixtures) for more details.
