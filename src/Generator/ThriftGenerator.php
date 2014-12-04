@@ -260,8 +260,7 @@ class ThriftGenerator
      */
     protected function dumpComplexTypes(array $complexTypes = array())
     {
-        $dumper = new NamespacedComplexTypeDumper();
-        $dumper->setOutputDir($this->outputDir);
+        $dumper = $this->getComplexTypeDumper();
         foreach ($complexTypes as $namespace => $definition) {
             $dumper
                 ->setNamespace($namespace)
@@ -277,8 +276,7 @@ class ThriftGenerator
      */
     protected function dumpServices(array $services = array())
     {
-        $dumper = new ServiceDumper();
-        $dumper->setOutputDir($this->outputDir);
+        $dumper = $this->getServiceDumper();
         foreach ($services as $name => $definition) {
             $dumper
                 ->setServiceName($name)
@@ -303,5 +301,31 @@ class ThriftGenerator
                 }
             }
         }
+    }
+
+    /**
+     * Creates and returns complex type dumper
+     *
+     * @return NamespacedComplexTypeDumper
+     */
+    protected function getComplexTypeDumper()
+    {
+        $dumper = new NamespacedComplexTypeDumper();
+        $dumper->setOutputDir($this->outputDir);
+
+        return $dumper;
+    }
+
+    /**
+     * Creates and returns service dumper
+     *
+     * @return ServiceDumper
+     */
+    protected function getServiceDumper()
+    {
+        $dumper = new ServiceDumper();
+        $dumper->setOutputDir($this->outputDir);
+        
+        return $dumper;
     }
 }
