@@ -14,15 +14,11 @@ namespace Gtt\ThriftGenerator\Reflection;
 
 use Gtt\ThriftGenerator\Exception\InvalidClassStructureException;
 use Gtt\ThriftGenerator\Reflection\MethodPrototype;
-
-use Gtt\ThriftGenerator\TypeHelper;
+use Gtt\ThriftGenerator\Reflection\ComplexTypeReflection;
 use Zend\Code\Reflection\MethodReflection;
-
-use Zend\Code\Reflection\PropertyReflection;
 use Zend\Server\Reflection as ZendServerReflection;
 use Zend\Server\Reflection\ReflectionClass as ZendReflectionClass;
 use Zend\Server\Reflection\Prototype as ZendReflectionPrototype;
-
 use \ReflectionClass;
 
 /**
@@ -30,7 +26,7 @@ use \ReflectionClass;
  *
  * @author fduch <alex.medwedew@gmail.com>
  */
-class ServiceReflection extends ReflectionClass
+class ServiceReflection extends ComplexTypeReflection
 {
     /**
      * Original class reflection
@@ -49,7 +45,7 @@ class ServiceReflection extends ReflectionClass
     /**
      * Introspected exception reflections from original class methods
      *
-     * @var ReflectionClass[]
+     * @var ComplexTypeReflection[]
      */
     protected $exceptionRefs = array();
 
@@ -58,7 +54,7 @@ class ServiceReflection extends ReflectionClass
      * Struct can be any DTO class used as method parameter, return value
      * or public property of another struct or exception
      *
-     * @var ReflectionClass[]
+     * @var ComplexTypeReflection[]
      */
     protected $structRefs = array();
 
@@ -90,7 +86,7 @@ class ServiceReflection extends ReflectionClass
     /**
      * Returns original class exceptions can be thrown from its methods
      *
-     * @return \ReflectionClass[]
+     * @return ComplexTypeReflection[]
      */
     public function getExceptions()
     {
@@ -100,7 +96,7 @@ class ServiceReflection extends ReflectionClass
     /**
      * Returns original class structs
      *
-     * @return \ReflectionClass[]
+     * @return ComplexTypeReflection[]
      */
     public function getStructs()
     {
@@ -186,13 +182,13 @@ class ServiceReflection extends ReflectionClass
                     // TODO need to check what kind of exceptions are allowed in thrift
                     // may be we should check that exception classes are user defined
                     if ($exceptionRef->isInstantiable() && $exceptionRef->isSubclassOf("\Exception")) {
-                        $exceptions[$exceptionClass] = $exceptionRef;
+                        $exceptions[$exceptionClass] = new ComplexTypeReflection($exceptionRef->getName());
                     } else {
                         throw new InvalidClassStructureException(
                             $this->classRef->getName(),
                             sprintf(
                                 "Method %s has invalid exception %s" .
-                                "Only instantiable subclassess of classes \Exception class are allowed.",
+                                "Only instantiable subclassess of \Exception class are allowed.",
                                 $prototype->getMethodReflection()->getName(),
                                 $exceptionRef->getName()
                             )
@@ -235,11 +231,10 @@ class ServiceReflection extends ReflectionClass
                         );
                     }
                     $structRefs[$parameterClassRef->getName()] = $parameterClassRef;
-                    $this->collectStructsFromClass($parameterClassRef, $structRefs);
                 }
             }
 
-            //collect method return
+            // collect method return
             $returnClassRef = $this->resolveParameterSingleClass($methodPrototype->getReturnType());
             if ($returnClassRef && !$returnClassRef->isInstantiable()) {
                 // non-instantiable returns are not allowed
@@ -247,7 +242,7 @@ class ServiceReflection extends ReflectionClass
                 throw new InvalidClassStructureException(
                     $this->classRef->getName(),
                     sprintf(
-                        "Method %s has non-instantiable return value %s" .
+                        "Method %s has non-instantiable return value %s." .
                         "Only instantiable classes are allowed for method return values.",
                         $returnClassRef->getName(),
                         $methodPrototype->getMethodReflection()->getName()
@@ -257,93 +252,9 @@ class ServiceReflection extends ReflectionClass
 
             if ($returnClassRef && $returnClassRef->isInstantiable()) {
                 $structRefs[$returnClassRef->getName()] = $returnClassRef;
-                $this->collectStructsFromClass($returnClassRef, $structRefs);
             }
-        }
-
-        // collect structs from exceptions
-        foreach ($this->exceptionRefs as $exceptionRef) {
-            $this->collectStructsFromClass($exceptionRef, $structRefs);
         }
 
         $this->structRefs = array_values($structRefs);
-    }
-
-    /**
-     * Collects structs from already collected struct and puts it into $structRefs parameter specified
-     *
-     * @param ReflectionClass $classRef class reflection
-     * @param ReflectionClass[] &$structRefs list of already collected structs
-     *
-     * @return void
-     */
-    private function collectStructsFromClass (ReflectionClass $classRef, &$structRefs)
-    {
-        $classProperties = $classRef->getProperties(\ReflectionProperty::IS_PUBLIC);
-        foreach ($classProperties as $classProperty) {
-            $propertyName = $classProperty->getName();
-            //fetching type of class property stored in @var annotation
-            // get property type
-            $propertyType = null;
-            $zendPropertyRef = new PropertyReflection($classRef->getName(), $propertyName);
-            foreach ($zendPropertyRef->getDocBlock()->getTags() as $tag) {
-                if ($tag->getName() == 'var') {
-                    $propertyType = $tag->getContent();
-                    break;
-                }
-            }
-
-            if (!$propertyType) {
-                throw new InvalidClassStructureException(
-                    $classRef->getName(),
-                    sprintf(
-                        "The type of property %s for complex type %s must be set",
-                        $propertyName,
-                        $this->classRef->getName()
-                    )
-                );
-            }
-
-            $propertyClass = $this->resolveParameterSingleClass($propertyType);
-            if ($propertyClass) {
-                // normalize property type
-                $propertyType =  $propertyClass->getName();
-                if (array_key_exists($propertyType, $structRefs)) {
-                    continue;
-                }
-                if (!$propertyClass->isInstantiable()) {
-                    throw new InvalidClassStructureException(
-                        $classRef->getName(),
-                        sprintf(
-                            "Property %s has type %s that is not instantiable. Only instantiable types are allowed.",
-                            $classProperty->getName(),
-                            $propertyType
-                        )
-                    );
-                }
-                $structRefs[$propertyType] = $propertyClass;
-                $this->collectStructsFromClass($propertyClass, $structRefs);
-            }
-        }
-    }
-
-    /**
-     * Resolves parameter's single class
-     * Fetches single types from lists (\Test\Class[]) or simply reflects
-     * class (if it exists) of the type specified. Otherwise returns null
-     *
-     * @param string $type type
-     *
-     * @return ReflectionClass|null
-     */
-    private function resolveParameterSingleClass($type)
-    {
-        if (TypeHelper::isListType($type)) {
-            $type = TypeHelper::getListSingleType($type);
-        }
-        if (class_exists($type) || interface_exists($type)) {
-            return new ReflectionClass($type);
-        }
-        return null;
     }
 }

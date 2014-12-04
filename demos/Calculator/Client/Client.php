@@ -25,14 +25,14 @@ require_once $thriftLibDir.'/lib/php/lib/Thrift/ClassLoader/ThriftClassLoader.ph
 
 use Thrift\ClassLoader\ThriftClassLoader;
 
-use Gtt\ThriftGenerator\Example\Calculator\Source\Service\CalculatorClient;
-use Gtt\ThriftGenerator\Example\Calculator\Source\Service\StructWork;
-use Gtt\ThriftGenerator\Example\Calculator\Source\Service\ExceptionInvalidOperation;
+use Demo\Generated\Gtt\ThriftGenerator\Example\Calculator\Source\Service\CalculatorClient;
+use Demo\Generated\Gtt\ThriftGenerator\Example\Calculator\Source\Struct\Work;
+use Demo\Generated\Gtt\ThriftGenerator\Example\Calculator\Source\Exception\InvalidOperation;
 
-$GEN_DIR = realpath(dirname(__FILE__).'/../Generated').'/gen-php';
+$GEN_DIR = realpath(dirname(__FILE__).'/../Generated/PHP');
 $loader = new ThriftClassLoader();
 $loader->registerNamespace('Thrift', $thriftLibDir.'/lib/php/lib');
-$loader->registerDefinition('Gtt\ThriftGenerator\Example\Calculator\Source\Service', $GEN_DIR);
+$loader->registerDefinition('Demo\Generated', $GEN_DIR);
 $loader->register();
 
 /*
@@ -80,7 +80,7 @@ try {
   $sum = $client->add(1,1);
   print "1+1=$sum\n";
 
-  $work = new StructWork();
+  $work = new Work();
 
   // there is no introspection for enums for now - so we can not use them on client-side
   // $work->op = Operation::DIVIDE;
@@ -91,7 +91,7 @@ try {
   try {
     $client->calculate(1, $work);
     print "Whoa! We can divide by zero?\n";
-  } catch (ExceptionInvalidOperation $io) {
+  } catch (InvalidOperation $io) {
     print "InvalidOperation: $io->why\n";
   }
 

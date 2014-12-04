@@ -13,14 +13,11 @@
 namespace Gtt\ThriftGenerator\Generator;
 
 use Gtt\ThriftGenerator\Exception\InvalidClassStructureException;
-use Gtt\ThriftGenerator\Exception\PropertyNotSpecifiedException;
 use Gtt\ThriftGenerator\Exception\TargetNotSpecifiedException;
 use Gtt\ThriftGenerator\Exception\TransformerNotSpecifiedException;
 use Gtt\ThriftGenerator\Exception\UnsupportedDefaultValueException;
 use Gtt\ThriftGenerator\Transformer\TransformerInterface;
-
 use Zend\Code\Reflection\PropertyReflection;
-
 use ReflectionProperty;
 
 /**

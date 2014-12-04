@@ -25,6 +25,7 @@ class NamespaceTransformer implements TransformerInterface
     public function transform($entity)
     {
         $thriftNamespace = str_replace("\\", ".", ltrim($entity, "\\"));
+
         return $thriftNamespace;
     }
 }
