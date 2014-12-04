@@ -10,7 +10,7 @@
  * Date: 10/16/14
  */
 
-namespace Gtt\ThriftGenerator\Exception;
+namespace Gtt\ThriftGenerator\Generator\Exception;
 
 /**
  * Exception is thrown when target entity/entities are not specified before generation process is started

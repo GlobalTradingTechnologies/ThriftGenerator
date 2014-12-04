@@ -10,7 +10,7 @@
  * Date: 11/17/14
  */
 
-namespace Gtt\ThriftGenerator\Exception;
+namespace Gtt\ThriftGenerator\Generator\Exception;
 
 /**
  * Exception is thrown when operation can not be succeeded since transformer is not specified

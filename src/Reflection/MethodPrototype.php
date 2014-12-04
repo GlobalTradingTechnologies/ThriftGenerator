@@ -11,12 +11,10 @@
  */
 namespace Gtt\ThriftGenerator\Reflection;
 
-use Gtt\ThriftGenerator\Exception\InvalidArgumentException;
-
+use Gtt\ThriftGenerator\Reflection\Exception\InvalidArgumentException;
 use Zend\Server\Reflection\Prototype;
 use Zend\Server\Reflection\ReflectionParameter;
 use Zend\Server\Reflection\ReflectionReturnValue;
-
 use ReflectionClass;
 use ReflectionMethod;
 

@@ -10,10 +10,10 @@
  * Date: 10/16/14
  */
 
-namespace Gtt\ThriftGenerator\Exception;
+namespace Gtt\ThriftGenerator\Generator\Exception;
 
 /**
- * Invalid argument exception
+ * Generator invalid argument exception
  *
  * @author fduch <alex.medwedew@gmail.com>
  */
