@@ -14,8 +14,8 @@ namespace Gtt\ThriftGenerator\Generator;
 
 use Gtt\ThriftGenerator\Dumper\NamespacedComplexTypeDumper;
 use Gtt\ThriftGenerator\Dumper\ServiceDumper;
-use Gtt\ThriftGenerator\Exception\InvalidArgumentException;
-use Gtt\ThriftGenerator\Exception\TargetNotSpecifiedException;
+use Gtt\ThriftGenerator\Generator\Exception\InvalidArgumentException;
+use Gtt\ThriftGenerator\Generator\Exception\TargetNotSpecifiedException;
 use Gtt\ThriftGenerator\Reflection\ServiceReflection;
 use Gtt\ThriftGenerator\Transformer\ClassNameTransformer;
 use Gtt\ThriftGenerator\Transformer\NamespaceTransformer;

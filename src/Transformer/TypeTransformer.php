@@ -12,7 +12,7 @@
 
 namespace Gtt\ThriftGenerator\Transformer;
 
-use Gtt\ThriftGenerator\Exception\UnsupportedTypeException;
+use Gtt\ThriftGenerator\Transformer\Exception\UnsupportedTypeException;
 use Gtt\ThriftGenerator\TypeHelper;
 
 /**

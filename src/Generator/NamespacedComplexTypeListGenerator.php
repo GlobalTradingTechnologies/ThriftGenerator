@@ -12,8 +12,8 @@
 
 namespace Gtt\ThriftGenerator\Generator;
 
-use Gtt\ThriftGenerator\Exception\InvalidArgumentException;
-use Gtt\ThriftGenerator\Exception\TargetNotSpecifiedException;
+use Gtt\ThriftGenerator\Generator\Exception\InvalidArgumentException;
+use Gtt\ThriftGenerator\Generator\Exception\TargetNotSpecifiedException;
 use Gtt\ThriftGenerator\Transformer\ClassNameTransformer;
 use Gtt\ThriftGenerator\Transformer\NamespaceTransformer;
 use Gtt\ThriftGenerator\Reflection\ComplexTypeReflection;

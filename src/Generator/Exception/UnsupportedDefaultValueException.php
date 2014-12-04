@@ -10,7 +10,7 @@
  * Date: 10/16/14
  */
 
-namespace Gtt\ThriftGenerator\Exception;
+namespace Gtt\ThriftGenerator\Generator\Exception;
 
 /**
  * Exception is thrown when class has property with default value which type is not supported

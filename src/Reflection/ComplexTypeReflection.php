@@ -12,7 +12,7 @@
 
 namespace Gtt\ThriftGenerator\Reflection;
 
-use Gtt\ThriftGenerator\Exception\InvalidClassStructureException;
+use Gtt\ThriftGenerator\Reflection\Exception\InvalidClassStructureException;
 use Gtt\ThriftGenerator\TypeHelper;
 use Zend\Code\Reflection\PropertyReflection;
 use ReflectionClass;

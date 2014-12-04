@@ -10,7 +10,7 @@
  * Date: 10/16/14
  */
 
-namespace Gtt\ThriftGenerator\Exception;
+namespace Gtt\ThriftGenerator\Reflection\Exception;
 
 /**
  * Exception is thrown when class cannot be properly reflected due to its unsupported or invalid structure

@@ -12,11 +12,10 @@
 
 namespace Gtt\ThriftGenerator\Generator;
 
-use Gtt\ThriftGenerator\Exception\TargetNotSpecifiedException;
-use Gtt\ThriftGenerator\Exception\TransformerNotSpecifiedException;
+use Gtt\ThriftGenerator\Generator\Exception\TargetNotSpecifiedException;
+use Gtt\ThriftGenerator\Generator\Exception\TransformerNotSpecifiedException;
 use Gtt\ThriftGenerator\Transformer\TransformerInterface;
 use Gtt\ThriftGenerator\Transformer\TypeTransformer;
-
 use ReflectionClass;
 
 /**

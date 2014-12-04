@@ -12,7 +12,7 @@
 
 namespace Gtt\ThriftGenerator\Generator;
 
-use Gtt\ThriftGenerator\Exception\TargetNotSpecifiedException;
+use Gtt\ThriftGenerator\Generator\Exception\TargetNotSpecifiedException;
 
 /**
  * Generates include node according to current thrift definition namespace

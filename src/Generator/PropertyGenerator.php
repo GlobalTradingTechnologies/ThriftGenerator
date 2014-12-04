@@ -12,10 +12,10 @@
 
 namespace Gtt\ThriftGenerator\Generator;
 
-use Gtt\ThriftGenerator\Exception\InvalidClassStructureException;
-use Gtt\ThriftGenerator\Exception\TargetNotSpecifiedException;
-use Gtt\ThriftGenerator\Exception\TransformerNotSpecifiedException;
-use Gtt\ThriftGenerator\Exception\UnsupportedDefaultValueException;
+use Gtt\ThriftGenerator\Generator\Exception\TargetNotSpecifiedException;
+use Gtt\ThriftGenerator\Generator\Exception\TransformerNotSpecifiedException;
+use Gtt\ThriftGenerator\Generator\Exception\UnsupportedDefaultValueException;
+use Gtt\ThriftGenerator\Generator\Exception\PropertyTypeNotSetException;
 use Gtt\ThriftGenerator\Transformer\TransformerInterface;
 use Zend\Code\Reflection\PropertyReflection;
 use ReflectionProperty;
@@ -131,9 +131,7 @@ EOT;
             }
         }
         if (!$propertyType) {
-            throw new InvalidClassStructureException(
-                $propertyClassName, sprintf("The type of property %s must be set", $propertyName)
-            );
+            throw new PropertyTypeNotSetException($propertyName, $propertyClassName);
         }
         return $propertyType;
     }

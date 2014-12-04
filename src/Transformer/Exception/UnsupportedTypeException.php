@@ -10,7 +10,7 @@
  * Date: 10/16/14
  */
 
-namespace Gtt\ThriftGenerator\Exception;
+namespace Gtt\ThriftGenerator\Transformer\Exception;
 
 /**
  * Exception is thrown for the PHP types that could not be properly translated to thrift types

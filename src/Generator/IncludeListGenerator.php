@@ -12,7 +12,7 @@
 
 namespace Gtt\ThriftGenerator\Generator;
 
-use Gtt\ThriftGenerator\Exception\InvalidArgumentException;
+use Gtt\ThriftGenerator\Generator\Exception\InvalidArgumentException;
 use Gtt\ThriftGenerator\Reflection\ComplexTypeReflection;
 use Gtt\ThriftGenerator\Reflection\ServiceReflection;
 

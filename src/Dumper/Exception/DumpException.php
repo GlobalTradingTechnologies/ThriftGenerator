@@ -14,7 +14,7 @@
  * Date: 11/28/14
  */
 
-namespace Gtt\ThriftGenerator\Exception;
+namespace Gtt\ThriftGenerator\Dumper\Exception;
 
 use \RuntimeException;
 

@@ -12,7 +12,7 @@
 
 namespace Gtt\ThriftGenerator\Dumper;
 
-use Gtt\ThriftGenerator\Exception\DumpException;
+use Gtt\ThriftGenerator\Dumper\Exception\DumpException;
 
 /**
  * Dumps complex type definitions grouped by namespace
