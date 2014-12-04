@@ -80,13 +80,16 @@ class ThriftGenerator
      */
     public function setClasses(array $classRefs)
     {
-        $classRefs = array_unique($classRefs, SORT_REGULAR);
         foreach ($classRefs as $classRef) {
+            $name = $classRef->getName();
+            if (isset($this->classRefs[$name])) {
+                continue;
+            }
             if (!$classRef instanceof ReflectionClass) {
                 throw new InvalidArgumentException("All the classes to be handled by ".__CLASS__." specified by ".
                 __METHOD__. "must be instances of ReflectionClass");
             }
-            $this->classRefs[] = $classRef;
+            $this->classRefs[$name] = $classRef;
         }
         return $this;
     }
