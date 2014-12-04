@@ -80,8 +80,14 @@ class GeneratorTest extends PHPUnit_Framework_TestCase
                     // test case folder is valid
                     // recursively iterate through classesDir in order to collect 'services' (classes with names starting with 'Service')
                     $classesDirIterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($classesDir));
-                    $regexIterator = new \RegexIterator($classesDirIterator, '/^.+\/Service[^\/]*\.php$/i', \RecursiveRegexIterator::GET_MATCH);
-                    foreach($regexIterator as $service) {
+                    $regexIterator = new \RegexIterator($classesDirIterator, '/^.+\/Service[^\/]*\.php$/i', \RegexIterator::GET_MATCH);
+                    // sorting classes by it filenames in order to be sure in that tests run with classes specified
+                    // always in the same order
+                    $array = iterator_to_array($regexIterator);
+                    uasort($array, function ($a, $b) {
+                        return strcmp($a[0], $b[0]);
+                    });
+                    foreach($array as $service) {
                         // fetch service reflection
                         $serviceFileZendReflection = new FileReflection($service[0], true);
                         $serviceClassesRefs[]      = $serviceFileZendReflection->getClass();
@@ -126,14 +132,14 @@ class GeneratorTest extends PHPUnit_Framework_TestCase
      *
      * @return bool
      */
-    protected function ksortRecursive($array)
+    protected function ksortRecursive($array, $sort_flags = SORT_REGULAR)
     {
         if (!is_array($array)) {
             return false;
         }
-        ksort($array);
+        ksort($array, $sort_flags);
         foreach ($array as &$arr) {
-            $this->ksortRecursive($arr);
+            $this->ksortRecursive($arr, $sort_flags);
         }
         return true;
     }
