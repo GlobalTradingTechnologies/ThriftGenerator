@@ -47,7 +47,7 @@ ThriftGenerator has handy OOP interface:
 use Gtt\ThriftGenerator\Generator\ThriftGenerator;
 
 $generator = new ThriftGenerator();
-// set classes that should be introspected in order to generate thrift file with it definition and output dir
+// set classes that should be introspected in order to generate thrift definition files and output dir
 $generator
     ->setClasses(
         array(
