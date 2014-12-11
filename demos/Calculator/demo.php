@@ -32,7 +32,9 @@ $phpGeneratedFolder = $generatedFolder."/PHP";
 checkEnv($thriftGeneratedFolder, $phpGeneratedFolder);
 
 // Generate thrift definition files
-mkdir($thriftGeneratedFolder);
+if (!is_dir($thriftGeneratedFolder)) {
+    mkdir($thriftGeneratedFolder);
+}
 try{
     $className = "Gtt\ThriftGenerator\Example\Calculator\Source\Service\Calculator";
 
@@ -47,7 +49,9 @@ try{
 }
 
 // Generate thrift classes
-mkdir($phpGeneratedFolder);
+if (!is_dir($phpGeneratedFolder)) {
+    mkdir($phpGeneratedFolder);
+}
 $serviceName        = str_replace("\\", ".", $className);
 $serviceFileName    = $thriftGeneratedFolder."/".$serviceName.".thrift";
 $pb = new ProcessBuilder();
@@ -95,15 +99,5 @@ function checkEnv($thriftGeneratedFolder, $phpGeneratedFolder)
         throw new \RuntimeException("Connection to localhost:8080 cannot be established\n".
             "Please start web server listening 8080 port with document root located at ./Server folder\n"
         );
-    }
-
-    if (is_dir($thriftGeneratedFolder)) {
-        throw new \RuntimeException("$thriftGeneratedFolder should not exist to launch thrift definition generation. ".
-            "Consider to remove it if you perform repeated demo launch");
-    }
-
-    if (is_dir($phpGeneratedFolder)) {
-        throw new \RuntimeException("$phpGeneratedFolder should not exist to launch thrift compilation. ".
-            "Consider to remove it if you perform repeated demo launch");
     }
 }
