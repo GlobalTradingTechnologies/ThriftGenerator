@@ -29,6 +29,13 @@ abstract class AbstractFilesystemDumper implements DumperInterface
     protected $outputDir;
 
     /**
+     * Flags defines whether existing files could be rewritten during dump or not
+     *
+     * @var bool
+     */
+    protected $overwriteExisting = true;
+
+    /**
      * Sets output directory path
      *
      * @param string $dir path to output directory
@@ -53,6 +60,26 @@ abstract class AbstractFilesystemDumper implements DumperInterface
     }
 
     /**
+     * Sets rewrite existing flag value
+     *
+     * @param bool $overwriteExisting
+     */
+    public function setOverwriteExisting($overwriteExisting = true)
+    {
+        $this->overwriteExisting = (bool)$overwriteExisting;
+    }
+
+    /**
+     * Returns rewrite existing flag value
+     *
+     * @return bool
+     */
+    public function getOverwriteExisting()
+    {
+        return $this->overwriteExisting;
+    }
+
+    /**
      * Dumps thrift definition file into the filesystem
      *
      * @param string $path file path
@@ -62,7 +89,7 @@ abstract class AbstractFilesystemDumper implements DumperInterface
      */
     protected function dumpFile($path, $content)
     {
-        if (file_exists($path)) {
+        if (!$this->overwriteExisting && file_exists($path)) {
             throw new DumpException("Can not dump thrift definition into $path. File already exists");
         }
         if (file_put_contents($path, $content) === false) {
