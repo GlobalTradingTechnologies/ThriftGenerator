@@ -13,6 +13,7 @@
 namespace Gtt\ThriftGenerator\Dumper;
 
 use Gtt\ThriftGenerator\Dumper\Exception\DumpException;
+use Gtt\ThriftGenerator\Generator\ServiceFilenameGenerator;
 
 /**
  * Dumps generated service definition
@@ -98,9 +99,22 @@ class ServiceDumper extends AbstractFilesystemDumper
             throw new DumpException("Service definition content is not specified");
         }
 
-        $servicePath = str_replace("\\", ".", $this->serviceName);
-        $servicePath = $this->outputDir.DIRECTORY_SEPARATOR.$servicePath.".thrift";
+        $filenameGenerator = $this->getFilenameGenerator();
+        $servicePath = $this->outputDir.DIRECTORY_SEPARATOR.$filenameGenerator->generate();
 
         $this->dumpFile($servicePath, $this->serviceDefinition);
+    }
+
+    /**
+     * Creates and returns service filename generator
+     *
+     * @return ServiceFilenameGenerator
+     */
+    protected function getFilenameGenerator()
+    {
+        $filenameGenerator = new ServiceFilenameGenerator();
+        $filenameGenerator->setServiceName($this->serviceName);
+
+        return $filenameGenerator;
     }
 }

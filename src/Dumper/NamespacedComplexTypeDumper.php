@@ -13,6 +13,7 @@
 namespace Gtt\ThriftGenerator\Dumper;
 
 use Gtt\ThriftGenerator\Dumper\Exception\DumpException;
+use Gtt\ThriftGenerator\Generator\NamespacedComplexTypeFilenameGenerator;
 
 /**
  * Dumps complex type definitions grouped by namespace
@@ -98,9 +99,22 @@ class NamespacedComplexTypeDumper extends AbstractFilesystemDumper
             throw new DumpException("Complex types definition content is not specified");
         }
 
-        $complexTypesPath = str_replace("\\", ".", ltrim($this->namespace, "\\"));
-        $complexTypesPath = $this->outputDir.DIRECTORY_SEPARATOR.$complexTypesPath.".thrift";
+        $filenameGenerator = $this->getFilenameGenerator();
+        $complexTypesPath  = $this->outputDir.DIRECTORY_SEPARATOR.$filenameGenerator->generate();
 
         $this->dumpFile($complexTypesPath, $this->complexTypesDefinition);
+    }
+
+    /**
+     * Creates and returns complex type filename generator
+     *
+     * @return NamespacedComplexTypeFilenameGenerator
+     */
+    protected function getFilenameGenerator()
+    {
+        $filenameGenerator = new NamespacedComplexTypeFilenameGenerator();
+        $filenameGenerator->setNamespace($this->namespace);
+
+        return $filenameGenerator;
     }
 }
