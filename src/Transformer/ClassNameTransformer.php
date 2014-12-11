@@ -58,4 +58,14 @@ class ClassNameTransformer implements TransformerInterface
 
         return $this;
     }
+
+    /**
+     * Returns current thrift file namespace
+     *
+     * @return string
+     */
+    public function getCurrentNamespace()
+    {
+        return $this->currentNamespace;
+    }
 }

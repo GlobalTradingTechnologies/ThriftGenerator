@@ -95,6 +95,16 @@ class ThriftGenerator
     }
 
     /**
+     * Returns list of class reflections specified
+     *
+     * @return \ReflectionClass[]
+     */
+    public function getClasses()
+    {
+        return $this->classRefs;
+    }
+
+    /**
      * Sets output directory path
      *
      * @param string $dir path to output directory
@@ -106,6 +116,16 @@ class ThriftGenerator
         $this->outputDir = $dir;
 
         return $this;
+    }
+
+    /**
+     * Returns output dir path
+     *
+     * @return string
+     */
+    public function getOutputDir()
+    {
+        return $this->outputDir;
     }
 
     /**

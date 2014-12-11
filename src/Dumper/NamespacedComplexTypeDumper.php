@@ -24,7 +24,7 @@ class NamespacedComplexTypeDumper extends AbstractFilesystemDumper
     /**
      * Namespace of complex types definition need to be dumped
      *
-     * @var
+     * @var string
      */
     protected $namespace;
 
@@ -50,6 +50,16 @@ class NamespacedComplexTypeDumper extends AbstractFilesystemDumper
     }
 
     /**
+     * Returns namespace of complex types need to be dumped
+     *
+     * @return string
+     */
+    public function getNamespace()
+    {
+        return $this->namespace;
+    }
+
+    /**
      * Sets complex types definition
      *
      * @param string $definition definition
@@ -61,6 +71,16 @@ class NamespacedComplexTypeDumper extends AbstractFilesystemDumper
         $this->complexTypesDefinition = $definition;
 
         return $this;
+    }
+
+    /**
+     * Returns complex types definition
+     *
+     * @return string
+     */
+    public function getComplexTypesDefinition()
+    {
+        return $this->complexTypesDefinition;
     }
 
     /**

@@ -54,6 +54,16 @@ abstract class AbstractComplexTypeGenerator extends AbstractGenerator
     }
 
     /**
+     * Returns reflection class
+     *
+     * @return ReflectionClass
+     */
+    public function getClass()
+    {
+        return $this->classRef;
+    }
+
+    /**
      * Sets complex type name transformer
      *
      * @param TransformerInterface $transformer complex type name transformer
@@ -65,6 +75,16 @@ abstract class AbstractComplexTypeGenerator extends AbstractGenerator
         $this->complexTypeNameTransformer = $transformer;
 
         return $this;
+    }
+
+    /**
+     * Returns complex type name transformer
+     *
+     * @return TransformerInterface
+     */
+    public function getComplexTypeNameTransformer()
+    {
+        return $this->complexTypeNameTransformer;
     }
 
     /**

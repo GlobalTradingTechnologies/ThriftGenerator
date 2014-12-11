@@ -54,6 +54,16 @@ class MethodGenerator extends AbstractGenerator
     }
 
     /**
+     * Returns method prototype
+     *
+     * @return MethodPrototype
+     */
+    public function getMethodPrototype()
+    {
+        return $this->methodPrototype;
+    }
+
+    /**
      * Sets type transformer
      *
      * @param TransformerInterface $transformer type transformer
@@ -64,6 +74,16 @@ class MethodGenerator extends AbstractGenerator
     {
         $this->typeTransformer = $transformer;
         return $this;
+    }
+
+    /**
+     * Returns type transformer
+     *
+     * @return TransformerInterface
+     */
+    public function getTypeTransformer()
+    {
+        return $this->typeTransformer;
     }
 
     /**

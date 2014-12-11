@@ -54,6 +54,16 @@ class IncludeListGenerator extends AbstractGenerator
     }
 
     /**
+     * Returns excluded namespaces
+     *
+     * @return array
+     */
+    public function getExcludedNamespaces()
+    {
+        return $this->excludedNamespaces;
+    }
+
+    /**
      * Sets used namespaces
      *
      * @param array $namespaces list of namespaces
@@ -108,6 +118,16 @@ class IncludeListGenerator extends AbstractGenerator
         $this->setUsedNamespaces($namespacesUsed);
 
         return $this;
+    }
+
+    /**
+     * Returns namespaces used
+     *
+     * @return array
+     */
+    public function getUsedNamespaces()
+    {
+        return $this->namespacesUsed;
     }
 
     /**

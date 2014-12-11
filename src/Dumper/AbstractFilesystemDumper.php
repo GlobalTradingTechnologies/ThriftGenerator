@@ -43,6 +43,16 @@ abstract class AbstractFilesystemDumper implements DumperInterface
     }
 
     /**
+     * Returns output directory path
+     *
+     * @return string
+     */
+    public function getOutputDir()
+    {
+        return $this->outputDir;
+    }
+
+    /**
      * Dumps thrift definition file into the filesystem
      *
      * @param string $path file path

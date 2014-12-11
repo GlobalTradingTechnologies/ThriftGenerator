@@ -52,6 +52,16 @@ class NamespaceGenerator extends AbstractGenerator
     }
 
     /**
+     * Returns namespace
+     *
+     * @return string
+     */
+    public function getNamespace()
+    {
+        return $this->namespace;
+    }
+
+    /**
      * Sets namespace name transformer
      *
      * @param TransformerInterface $transformer namespace name transformer
@@ -61,7 +71,18 @@ class NamespaceGenerator extends AbstractGenerator
     public function setNamespaceTransformer(TransformerInterface $transformer)
     {
         $this->namespaceTransformer = $transformer;
+
         return $this;
+    }
+
+    /**
+     * Returns namespace transformer
+     *
+     * @return TransformerInterface
+     */
+    public function getNamespaceTransformer()
+    {
+        return $this->namespaceTransformer;
     }
 
     /**

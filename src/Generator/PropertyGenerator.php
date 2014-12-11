@@ -67,6 +67,16 @@ class PropertyGenerator extends AbstractGenerator
     }
 
     /**
+     * Returns property reflection
+     *
+     * @return ReflectionProperty
+     */
+    public function getProperty()
+    {
+        return $this->propertyRef;
+    }
+
+    /**
      * Sets type transformer
      *
      * @param TransformerInterface $transformer type transformer
@@ -76,7 +86,18 @@ class PropertyGenerator extends AbstractGenerator
     public function setTypeTransformer(TransformerInterface $transformer)
     {
         $this->typeTransformer = $transformer;
+
         return $this;
+    }
+
+    /**
+     * Returns type transformer
+     *
+     * @return TransformerInterface
+     */
+    public function getTypeTransformer()
+    {
+        return $this->typeTransformer;
     }
 
     /**

@@ -50,6 +50,16 @@ class ServiceDumper extends AbstractFilesystemDumper
     }
 
     /**
+     * Returns service class name
+     *
+     * @return string
+     */
+    public function getServiceName()
+    {
+        return $this->serviceName;
+    }
+
+    /**
      * Sets service definition need to be dumped
      *
      * @param string $serviceDefinition service definition
@@ -61,6 +71,16 @@ class ServiceDumper extends AbstractFilesystemDumper
         $this->serviceDefinition = $serviceDefinition;
 
         return $this;
+    }
+
+    /**
+     * Returns service definition need to be dumped
+     *
+     * @return string
+     */
+    public function getServiceDefinition()
+    {
+        return $this->serviceDefinition;
     }
 
     /**

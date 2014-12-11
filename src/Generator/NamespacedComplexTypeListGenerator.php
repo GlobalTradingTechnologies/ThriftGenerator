@@ -54,6 +54,16 @@ class NamespacedComplexTypeListGenerator extends AbstractGenerator
     }
 
     /**
+     * Returns complex types common namespace
+     *
+     * @return string
+     */
+    public function getComplexTypesNamespace()
+    {
+        return $this->complexTypesNamespace;
+    }
+
+    /**
      * Sets complex type reflections
      *
      * @param ComplexTypeReflection[] $complexTypeRefs complex type reflection classes
@@ -71,6 +81,16 @@ class NamespacedComplexTypeListGenerator extends AbstractGenerator
             }
             $this->complexTypeRefs[] = $complexTypeRef;
         }
+    }
+
+    /**
+     * Returns complex type reflections
+     *
+     * @return ComplexTypeReflection[]
+     */
+    public function getComplexTypeRefs()
+    {
+        return $this->complexTypeRefs;
     }
 
     /**

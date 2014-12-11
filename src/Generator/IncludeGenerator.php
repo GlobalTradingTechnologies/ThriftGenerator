@@ -43,6 +43,16 @@ class IncludeGenerator extends AbstractGenerator
     }
 
     /**
+     * Returns namespace
+     *
+     * @return string
+     */
+    public function getNamespace()
+    {
+        return $this->namespace;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function generate()

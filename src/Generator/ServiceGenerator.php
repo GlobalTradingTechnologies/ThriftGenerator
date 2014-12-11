@@ -52,7 +52,18 @@ class ServiceGenerator extends AbstractGenerator
     public function setService(ServiceReflection $serviceReflection)
     {
         $this->serviceReflection = $serviceReflection;
+
         return $this;
+    }
+
+    /**
+     * Returns service reflection
+     *
+     * @return ServiceReflection
+     */
+    public function getService()
+    {
+        return $this->serviceReflection;
     }
 
     /**
@@ -65,7 +76,18 @@ class ServiceGenerator extends AbstractGenerator
     public function setServiceNameTransformer(TransformerInterface $transformer)
     {
         $this->serviceNameTransformer = $transformer;
+
         return $this;
+    }
+
+    /**
+     * Returns service name transformer
+     *
+     * @return TransformerInterface
+     */
+    public function getServiceNameTransformer()
+    {
+        return $this->serviceNameTransformer;
     }
 
     /**
