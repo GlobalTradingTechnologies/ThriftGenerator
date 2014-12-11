@@ -71,8 +71,8 @@ class ServiceDumper extends AbstractFilesystemDumper
         if (is_null($this->serviceName)) {
             throw new DumpException("Service full class name is not specified");
         }
-        if (is_null($this->outputDir)) {
-            throw new DumpException("Output dir is not specified");
+        if (is_null($this->outputDir) || !is_dir($this->outputDir) || !is_writable($this->outputDir)) {
+            throw new DumpException("Output dir is not specified, not exists or not writable");
         }
         if (is_null($this->serviceDefinition)) {
             throw new DumpException("Service definition content is not specified");

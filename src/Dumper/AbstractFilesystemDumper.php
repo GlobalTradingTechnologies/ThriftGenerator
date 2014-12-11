@@ -13,7 +13,6 @@
 namespace Gtt\ThriftGenerator\Dumper;
 
 use Gtt\ThriftGenerator\Dumper\Exception\DumpException;
-use Gtt\ThriftGenerator\Dumper\Exception\InvalidArgumentException;
 
 /**
  * Abstract filesystem dumper
@@ -38,9 +37,6 @@ abstract class AbstractFilesystemDumper implements DumperInterface
      */
     public function setOutputDir($dir)
     {
-        if (!is_dir($dir) || !is_writable($dir)) {
-            throw new InvalidArgumentException("Output directory $dir must exist and be writable");
-        }
         $this->outputDir = $dir;
 
         return $this;

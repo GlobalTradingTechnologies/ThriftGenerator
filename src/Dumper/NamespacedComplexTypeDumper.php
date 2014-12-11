@@ -71,8 +71,8 @@ class NamespacedComplexTypeDumper extends AbstractFilesystemDumper
         if (is_null($this->namespace)) {
             throw new DumpException("Complex types namespace is not specified");
         }
-        if (is_null($this->outputDir)) {
-            throw new DumpException("Output dir is not specified");
+        if (is_null($this->outputDir) || !is_dir($this->outputDir) || !is_writable($this->outputDir)) {
+            throw new DumpException("Output dir is not specified, not exists or not writable");
         }
         if (is_null($this->complexTypesDefinition)) {
             throw new DumpException("Complex types definition content is not specified");
