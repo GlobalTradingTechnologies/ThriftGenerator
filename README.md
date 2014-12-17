@@ -47,15 +47,18 @@ ThriftGenerator has handy OOP interface:
 use Gtt\ThriftGenerator\Generator\ThriftGenerator;
 
 $generator = new ThriftGenerator();
-// set classes that should be introspected in order to generate thrift definition files and output dir
 $generator
+    // set classes that should be introspected in order to generate thrift definition files
     ->setClasses(
         array(
             new ReflectionClass("\Your\Class\Name"),
             new ReflectionClass("\Another\Class\Name")
         )
     )
-    ->setOutputDir("<path to folder that will contain generated thrift definitions>");
+    // set output dir
+    ->setOutputDir("<path to folder that will contain generated thrift definitions>")
+    // generate!
+    ->generate();
 ```
 
 See also [demos](demos) and [functional test cases](tests/Fixtures) for more details.
