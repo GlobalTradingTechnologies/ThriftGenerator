@@ -162,10 +162,12 @@ class ThriftGenerator
      */
     protected function generateComplexTypes(array $serviceReflections = array())
     {
-         // collect structs and exceptions from service reflection
+        // collect structs and exceptions from service reflection
         /** @var ComplexTypeReflection[] $complexTypeRefs */
         $complexTypeRefs = array();
         foreach ($serviceReflections as $serviceReflection) {
+            // we don't using getTransitiveComplexTypes method here in order to avoid duplicated computations of the same
+            // complex types that is used inside several services specified (significant only for multi-class mode)
             /** @var ComplexTypeReflection[] $complexTypes list of service complex types */
             $complexTypes = array_merge($serviceReflection->getStructs(), $serviceReflection->getExceptions());
             // add to list of complex types only unique complex types

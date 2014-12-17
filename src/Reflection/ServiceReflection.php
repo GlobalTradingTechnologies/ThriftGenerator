@@ -59,6 +59,13 @@ class ServiceReflection extends ComplexTypeReflection
     protected $structRefs = array();
 
     /**
+     * Transitively fetched exceptions and structs from original class
+     *
+     * @var ComplexTypeReflection[]
+     */
+    protected $transitiveComplexTypeRefs;
+
+    /**
      * Constructor
      *
      * @param string $class class name
@@ -90,7 +97,7 @@ class ServiceReflection extends ComplexTypeReflection
      */
     public function getExceptions()
     {
-        return $this->exceptionRefs;
+        return array_values($this->exceptionRefs);
     }
 
     /**
@@ -100,13 +107,32 @@ class ServiceReflection extends ComplexTypeReflection
      */
     public function getStructs()
     {
-        return $this->structRefs;
+        return array_values($this->structRefs);
+    }
+
+    /**
+     * Returns transitively fetched exceptions and structs from original class
+     * (For example if:
+     *  1. Original service depends on A and B;
+     *  2. A depends on C, D, E;
+     *  3. B depends on F, D
+     * method returns A, B, C, D, E, F
+     *
+     * @return ComplexTypeReflection[]
+     */
+    public function getTransitiveComplexTypes()
+    {
+        if (is_null($this->transitiveComplexTypeRefs)) {
+            $complexTypeRefs = $this->exceptionRefs + $this->structRefs;
+            $this->collectComplexTypeDependencies($complexTypeRefs);
+            $this->transitiveComplexTypeRefs = array_values($complexTypeRefs);
+        }
+
+        return $this->transitiveComplexTypeRefs;
     }
 
     /**
      * Reflects original class methods to product method prototypes
-     *
-     * @return ZendReflectionPrototype[]
      */
     protected function reflectMethodPrototypes()
     {
@@ -168,8 +194,6 @@ class ServiceReflection extends ComplexTypeReflection
 
     /**
      * Reflects original class methods to collect exceptions can be thrown
-     *
-     * @return ReflectionClass[] list of exception classes refs
      */
     protected function reflectExceptions()
     {
@@ -197,15 +221,13 @@ class ServiceReflection extends ComplexTypeReflection
                 }
             }
         }
-        $this->exceptionRefs = array_values($exceptions);
+        $this->exceptionRefs = $exceptions;
     }
 
     /**
      * Reflects original class methods to collect structs used
      * Also fetches structs represented as public properties of already
      * collected struct or exception
-     *
-     * @return \ReflectionClass[]
      */
     protected function reflectStructs()
     {
@@ -255,6 +277,24 @@ class ServiceReflection extends ComplexTypeReflection
             }
         }
 
-        $this->structRefs = array_values($structRefs);
+        $this->structRefs = $structRefs;
+    }
+
+    /**
+     * Recursively collects complex type dependencies
+     *
+     * @param ComplexTypeReflection[] &$complexTypeRefs list of already collected dependencies
+     */
+    private function collectComplexTypeDependencies(&$complexTypeRefs)
+    {
+        foreach ($complexTypeRefs as $complexTypeRef) {
+            $dependencies = $complexTypeRef->getPropertyDependencies();
+            foreach ($dependencies as $dependency) {
+                if (!array_key_exists($dependency->getName(), $complexTypeRefs)) {
+                    $complexTypeRefs[$dependency->getName()] = $dependency;
+                    $this->collectComplexTypeDependencies($complexTypeRefs);
+                }
+            }
+        }
     }
 }
