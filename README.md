@@ -75,7 +75,8 @@ Roadmap
 
 It would be nice to have some features that are not implemented yet:
 
-1. Thrift versioning support.
-2. PHP classes inheritance introspection.
+1. Support of relative complex type/exception names (not FQCN's) in doc blocks.
+2. Thrift service inheritance support.
 3. Comments in generated thrift files.
 4. Custom doc-block's implementation to support some thrift-related options that can not be reflected from PHP method signatures or doc blocks (container types wide support, one-way calls, enum's and etc).
+5. Thrift versioning support.
