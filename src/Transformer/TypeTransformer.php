@@ -38,8 +38,8 @@ class TypeTransformer implements TransformerInterface
         'int'     => 'i32',
         'integer' => 'i32',
         'string'  => 'string',
-        // map array to list of strings since in php we can not recognize the type of array elements from doc comments and method signature
-        'array'   => "list<string>"
+        // map array to map of strings since in php we can not recognize the type of array elements from doc comments and method signature
+        'array'   => "map<string, string>"
     );
 
     /**
