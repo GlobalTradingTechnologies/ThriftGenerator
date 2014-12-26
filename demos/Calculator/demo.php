@@ -10,7 +10,7 @@
  * Date: 11/12/14
  */
 
-namespace Gtt\ThriftGenerator\Example\Calculator;
+namespace Gtt\ThriftGenerator\Demo\Calculator;
 
 use Gtt\ThriftGenerator\Generator\ThriftGenerator;
 use Symfony\Component\Process\Process;
@@ -36,7 +36,7 @@ if (!is_dir($thriftGeneratedFolder)) {
     mkdir($thriftGeneratedFolder);
 }
 try{
-    $className = "Gtt\ThriftGenerator\Example\Calculator\Source\Service\Calculator";
+    $className = "Gtt\ThriftGenerator\Demo\Calculator\Source\Service\Calculator";
 
     $generator = new ThriftGenerator();
     $generator

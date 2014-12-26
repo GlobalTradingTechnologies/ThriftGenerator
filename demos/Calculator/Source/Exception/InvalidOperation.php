@@ -34,7 +34,7 @@
  * under the License.
  */
 
-namespace Gtt\ThriftGenerator\Example\Calculator\Source\Exception;
+namespace Gtt\ThriftGenerator\Demo\Calculator\Source\Exception;
 
 /**
  * Description
