@@ -22,7 +22,7 @@
         "mikey179/vfsStream": "~1.0"
     },
     "autoload": {
-        "psr-4": { "Gtt\\ThriftGenerator\\": "src" }
+        "psr-4": { "Gtt\\ThriftGenerator\\": "src/Gtt/ThriftGenerator" }
     },
     "autoload-dev": {
         "psr-4": { "Gtt\\ThriftGenerator\\Tests\\": "tests" }
