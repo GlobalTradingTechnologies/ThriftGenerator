@@ -34,11 +34,11 @@
  * under the License.
  */
 
-namespace Gtt\ThriftGenerator\Example\Calculator\Source\Service;
+namespace Gtt\ThriftGenerator\Demo\Calculator\Source\Service;
 
-use Gtt\ThriftGenerator\Example\Calculator\Source\Struct\Work;
-use Gtt\ThriftGenerator\Example\Calculator\Source\Struct\Operation;
-use Gtt\ThriftGenerator\Example\Calculator\Source\Exception\InvalidOperation;
+use Gtt\ThriftGenerator\Demo\Calculator\Source\Struct\Work;
+use Gtt\ThriftGenerator\Demo\Calculator\Source\Struct\Operation;
+use Gtt\ThriftGenerator\Demo\Calculator\Source\Exception\InvalidOperation;
 
 /**
  * Calculator class that is similar to thrift tutorial
@@ -73,9 +73,9 @@ class Calculator
      * Calculates something
      *
      * @param int $logid log id
-     * @param \Gtt\ThriftGenerator\Example\Calculator\Source\Struct\Work $w contains operation description
+     * @param \Gtt\ThriftGenerator\Demo\Calculator\Source\Struct\Work $w contains operation description
      *
-     * @throws \Gtt\ThriftGenerator\Example\Calculator\Source\Exception\InvalidOperation in case of invalid operations
+     * @throws \Gtt\ThriftGenerator\Demo\Calculator\Source\Exception\InvalidOperation in case of invalid operations
      *
      * @return float
      */

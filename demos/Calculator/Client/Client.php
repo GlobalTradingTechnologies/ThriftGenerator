@@ -16,7 +16,7 @@ error_reporting(E_ALL);
 // composer autoload
 //include __DIR__ . '/../../autoload.php';
 // there is no introspection for enums for now - so we can not use them on client-side
-// use Gtt\ThriftGenerator\Example\Calculator\Source\Struct\Operation;
+// use Gtt\ThriftGenerator\Demo\Calculator\Source\Struct\Operation;
 
 
 // thrift autoload from gen-php folder
@@ -25,9 +25,9 @@ require_once $thriftLibDir.'/lib/php/lib/Thrift/ClassLoader/ThriftClassLoader.ph
 
 use Thrift\ClassLoader\ThriftClassLoader;
 
-use Demo\Generated\Gtt\ThriftGenerator\Example\Calculator\Source\Service\CalculatorClient;
-use Demo\Generated\Gtt\ThriftGenerator\Example\Calculator\Source\Struct\Work;
-use Demo\Generated\Gtt\ThriftGenerator\Example\Calculator\Source\Exception\InvalidOperation;
+use Demo\Generated\Gtt\ThriftGenerator\Demo\Calculator\Source\Service\CalculatorClient;
+use Demo\Generated\Gtt\ThriftGenerator\Demo\Calculator\Source\Struct\Work;
+use Demo\Generated\Gtt\ThriftGenerator\Demo\Calculator\Source\Exception\InvalidOperation;
 
 $GEN_DIR = realpath(dirname(__FILE__).'/../Generated/PHP');
 $loader = new ThriftClassLoader();

@@ -16,7 +16,7 @@ error_reporting(E_ALL);
 // composer autoload
 include __DIR__ . '/../../autoload.php';
 
-use Gtt\ThriftGenerator\Example\Calculator\Source\Struct\Operation;
+use Gtt\ThriftGenerator\Demo\Calculator\Source\Struct\Operation;
 
 
 // thrift autoload from gen-php folder
@@ -26,11 +26,11 @@ require_once $thriftLibDir.'/lib/php/lib/Thrift/ClassLoader/ThriftClassLoader.ph
 
 use Thrift\ClassLoader\ThriftClassLoader;
 
-use Demo\Generated\Gtt\ThriftGenerator\Example\Calculator\Source\Struct\Work;
-use Demo\Generated\Gtt\ThriftGenerator\Example\Calculator\Source\Exception\InvalidOperation;
+use Demo\Generated\Gtt\ThriftGenerator\Demo\Calculator\Source\Struct\Work;
+use Demo\Generated\Gtt\ThriftGenerator\Demo\Calculator\Source\Exception\InvalidOperation;
 
-use Demo\Generated\Gtt\ThriftGenerator\Example\Calculator\Source\Service\CalculatorProcessor;
-use Demo\Generated\Gtt\ThriftGenerator\Example\Calculator\Source\Service\CalculatorIf;
+use Demo\Generated\Gtt\ThriftGenerator\Demo\Calculator\Source\Service\CalculatorProcessor;
+use Demo\Generated\Gtt\ThriftGenerator\Demo\Calculator\Source\Service\CalculatorIf;
 
 $loader = new ThriftClassLoader();
 $loader->registerNamespace('Thrift', $thriftLibDir.'/lib/php/lib');

@@ -14,7 +14,7 @@
 if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
     /** @var Composer\Autoload\ClassLoader $loader */
     $loader = include __DIR__ . '/../vendor/autoload.php';
-    $loader->addPsr4('Gtt\\ThriftGenerator\\Example\\', __DIR__);
+    $loader->addPsr4('Gtt\\ThriftGenerator\\Demo\\', __DIR__);
 }
 
 return $loader;
